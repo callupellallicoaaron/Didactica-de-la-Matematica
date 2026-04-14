@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="es">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Información Académica - CALLUPE LLALLICO AARON SIXTO</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      font-family: 'Calibri', 'Arial', sans-serif;
+      background-color: #f0f0f0;
+    }
+
+    body {
+      padding: 20px;
+      overflow: auto;
+    }
+
+    .wrapper {
+      width: 100%;
+      min-height: 100%;
+    }
+
+    .container {
+      width: 100%;
+      background-color: white;
+      padding: 40px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      border-bottom: 3px solid #1a4d6d;
+      padding-bottom: 15px;
+    }
+
+    .header h1 {
+      color: #1a4d6d;
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .header p {
+      color: #555;
+      font-size: 14px;
+    }
+
+    .table-container {
+      width: 100%;
+      margin-top: 20px;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 2px solid #1a4d6d;
+      table-layout: fixed;
+    }
+
+    thead tr:first-child th {
+      background-color: #2a6a8d;
+      color: white;
+      font-weight: bold;
+      padding: 20px 15px;
+      text-align: center;
+      border: 1px solid #1a4d6d;
+      font-size: 12px;
+      height: auto;
+      width: 25%;
+    }
+
+    .section-label {
+      background-color: #2a6a8d;
+      color: white;
+      font-weight: bold;
+      padding: 12px 15px;
+      border: 1px solid #1a4d6d;
+      font-size: 11px;
+      text-align: left;
+      width: 18%;
+      vertical-align: top;
+    }
+
+    .competencia-cell {
+      background-color: #2a6a8d;
+      color: white;
+      font-weight: bold;
+      padding: 15px;
+      border: 1px solid #1a4d6d;
+      font-size: 12px;
+      text-align: center;
+      vertical-align: middle;
+      width: 20.5%;
+    }
+
+    .estandar-cell {
+      background-color: #f5f9fc;
+      font-size: 10px;
+      padding: 15px;
+      border: 1px solid #1a4d6d;
+      vertical-align: top;
+      width: 20.5%;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
+    .capacidades-cell {
+      background-color: #e8f0f5;
+      font-size: 10px;
+      padding: 15px;
+      border: 1px solid #1a4d6d;
+      vertical-align: top;
+      width: 20.5%;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
+    .capacidades-cell .highlight-competencia1 {
+      background-color: #ffeaa7;
+      padding: 6px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+    }
+
+    .capacidades-cell .highlight-competencia2 {
+      background-color: #a8e6cf;
+      padding: 6px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+    }
+
+    .capacidades-cell .highlight-competencia2-secondary {
+      background-color: #a8e6cf;
+      padding: 6px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+    }
+
+    .capacidades-cell .highlight-competencia3 {
+      background-color: #ffd3b6;
+      padding: 6px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+    }
+
+    .capacidades-cell .highlight-competencia3-secondary {
+      background-color: #ffd3b6;
+      padding: 6px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+    }
+
+    .capacidades-cell .highlight-competencia4 {
+      background-color: #ffccff;
+      padding: 6px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+    }
+
+    .capacidades-cell .highlight-competencia4-secondary {
+      background-color: #ffccff;
+      padding: 6px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+    }
+
+    .desempenios-cell {
+      background-color: #ffffff;
+      font-size: 9px;
+      padding: 15px;
+      border: 1px solid #1a4d6d;
+      vertical-align: top;
+      width: 20.5%;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
+    .grado-container {
+      display: flex;
+      gap: 15px;
+      width: 100%;
+    }
+
+    .grado-section {
+      flex: 1;
+    }
+
+    .grado-label {
+      font-weight: bold;
+      color: #1a4d6d;
+      margin-bottom: 8px;
+      font-size: 10px;
+      text-decoration: underline;
+      display: block;
+    }
+
+    .grado-content {
+      margin-bottom: 0;
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    li {
+      margin-bottom: 6px;
+      padding-left: 12px;
+      position: relative;
+      text-align: justify;
+      font-size: 9px;
+    }
+
+    li:before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: #1a4d6d;
+      font-weight: bold;
+    }
+
+    /* Colores para resaltar capacidades y desempeños */
+    .highlight-competencia1 {
+      background-color: #ffeaa7;
+      padding: 8px;
+      border-radius: 4px;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .highlight-competencia2 {
+      background-color: #a8e6cf;
+      padding: 8px;
+      border-radius: 4px;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .highlight-competencia3 {
+      background-color: #ffd3b6;
+      padding: 8px;
+      border-radius: 4px;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .highlight-competencia4 {
+      background-color: #ffccff;
+      padding: 8px;
+      border-radius: 4px;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .desempenios-cell .highlight-competencia1 li {
+      background-color: #ffeaa7;
+      padding: 6px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+    }
+
+    .desempenios-cell .highlight-competencia2 li {
+      background-color: #a8e6cf;
+      padding: 6px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+    }
+
+    .desempenios-cell .highlight-competencia3 li {
+      background-color: #ffd3b6;
+      padding: 6px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+    }
+
+    .desempenios-cell .highlight-competencia4 li {
+      background-color: #ffccff;
+      padding: 6px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+    }
+
+    /* Segunda capacidad - Verde claro */
+    .highlight-competencia2-secondary {
+      background-color: #b8f3dc;
+      padding: 8px;
+      border-radius: 4px;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .desempenios-cell .highlight-competencia2-secondary li {
+      background-color: #b8f3dc;
+      padding: 6px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+    }
+
+    /* Tercera capacidad - Naranja claro */
+    .highlight-competencia3-secondary {
+      background-color: #ffc9a8;
+      padding: 8px;
+      border-radius: 4px;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .desempenios-cell .highlight-competencia3-secondary li {
+      background-color: #ffc9a8;
+      padding: 6px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+    }
+
+    /* Cuarta capacidad - Rosa más claro */
+    .highlight-competencia4-secondary {
+      background-color: #ffe0ff;
+      padding: 8px;
+      border-radius: 4px;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .desempenios-cell .highlight-competencia4-secondary li {
+      background-color: #ffe0ff;
+      padding: 6px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+    }
+
+    @media (max-width: 1200px) {
+      table {
+        font-size: 9px;
+      }
+      li {
+        font-size: 8px;
+      }
+    }
+
+    @media print {
+      body {
+        background-color: white;
+        padding: 0;
+      }
+      .container {
+        box-shadow: none;
+        padding: 20px;
+        max-width: 100%;
+      }
+      table {
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com/3.4.17" type="text/javascript"></script>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+ </head>
+ <body>
+  <div class="wrapper">
+   <div class="container">
+    <div class="header">
+     <h1>ESTUDIANTES:</h1>
+     <h1>CALLUPE LLALLICO AARON SIXTO</h1>
+     <h1>INGA MORENO ESTEFANY YERALDIN</h1>
+     <h1>SANCHEZ VERASTEGUI RUTH ESTER</h1>
+     <p>CICLO VI</p>
+    </div>
+    <div class="table-container">
+     <table>
+      <tbody>
+       <!-- ROW 1: COMPETENCIA -->
+       <tr>
+        <td class="section-label" style="width: 18%;">COMPETENCIA</td>
+        <td class="competencia-cell">Resuelve problemas de cantidad</td>
+        <td class="competencia-cell">Resuelve problemas de regularidad, equivalencia y cambio</td>
+        <td class="competencia-cell">Resuelve problemas de formas, movimiento y localización</td>
+        <td class="competencia-cell">Resuelve problemas de gestión de datos e incertidumbre</td>
+       </tr><!-- ROW 2: ESTÁNDAR (NIVEL IV) -->
+       <tr>
+        <td class="section-label" style="width: 18%;">ESTÁNDAR (Nivel IV)</td>
+        <td class="estandar-cell">Resuelve problemas referidos a una o más acciones de agregar, quitar, igualar, repetir o repartir cantidades, así como partir y repartir una unidad en partes iguales; traduciéndolas a expresiones de adición, sustracción, multiplicación y división de números naturales y de adición y sustracción de fracciones usuales. Expresa su comprensión del sistema decimal con notación desarrollada; así como del valor de posición de un dígito en números de hasta cuatro cifras. Representa de diversas formas su comprensión de la noción de fracción como parte de la unidad y las equivalencias entre fracciones usuales empleando lenguaje numérico. Emplea estrategias de cálculo mental, como descomposiciones aditivas y multiplicativas, significativas con números hasta el número 100, para construir sus nociones de multiplicación y división. Emplea estrategias de estimación, redondeo, para estimar o calcular con números naturales hasta 10 000. Mide de manera exacta o aproximada la capacidad y el tiempo, usando unidades convencionales (litro y horas exactas) y no convencionales, a partir de actividades vivenciales. Justifica sus procesos de resolución relativos a problemas referidos a acciones de partir o distribuir, así como de estimar o medir, empleando lenguaje matemático.</td>
+        <td class="estandar-cell">Resuelve problemas que presentan dos equivalencias, regularidades o relación de cambio entre dos magnitudes y expresa reglas de formación con dos variables de la regla de formación de patrones aditivos o multiplicativos; usando lenguaje algebraico y diversas representaciones. Usa estrategias, la descomposición de números, las propiedades de las operaciones, procedimientos de cálculo mental, para crear, continuar o completar patrones aditivos o multiplicativos. Realiza afirmaciones sobre elementos no conocidos de patrones aditivos o multiplicativos, la equivalencia entre expresiones, las relaciones de cambio entre magnitudes, basándose en sus experiencias concretas y relacionándolas a través de lenguaje algebraico.</td>
+        <td class="estandar-cell">Resuelve problemas en los que modela características de los objetos con formas geométricas bidimensionales (polígonos) y tridimensionales (cubos y prismas de base rectangular), así como su ubicación y movimiento en el plano. Descubre relaciones entre las formas geométricas. Mide y estima medidas de longitud, perímetro, área y capacidad seleccionando unidades convencionales e instrumentos de medición apropiados. Realiza traslaciones, giros y simetrías de formas bidimensionales en cuadrículas. Describe con lenguaje geométrico, elementos, propiedades y movimientos de formas bidimensionales y tridimensionales.</td>
+        <td class="estandar-cell">Resuelve problemas relacionados con datos cualitativos o cuantitativos (discretos) sobre un tema de estudio de recolección, organización, representación e interpretación de datos; así como la ocurrencia de eventos, con ayuda de preguntas guía, considerando el contexto familiar. Recopila datos mediante encuestas sencillas o entrevistas cortas con preguntas adecuadas empleando procedimientos y recursos; los procesa y organiza en listas, tablas de frecuencias o gráficos de barras simples, para describirlos y analizarlos. Interpreta información contenida en estos, o la información dada en situaciones familiares. Expresa la ocurrencia de un evento relacionado a una acción vivencial usando las nociones de posible, imposible.</td>
+       </tr><!-- ROW 3: CAPACIDADES -->
+       <tr>
+        <td class="section-label" style="width: 18%;">CAPACIDADES</td>
+        <td class="capacidades-cell">
+         <ul>
+          <li class="highlight-competencia1">Traduce cantidades a expresiones numéricas</li>
+          <li class="highlight-competencia2">Comunica su comprensión sobre los números y las operaciones</li>
+          <li class="highlight-competencia3">Usa estrategias y procedimientos de estimación y cálculo.</li>
+          <li class="highlight-competencia4">Argumenta afirmaciones sobre relaciones numéricas y las operaciones</li>
+         </ul></td>
+        <td class="capacidades-cell">
+         <ul>
+          <li class="highlight-competencia1">Traduce datos y condiciones a expresiones algebraicas</li>
+          <li class="highlight-competencia2">Comunica su comprensión sobre las relaciones algebraicas</li>
+          <li class="highlight-competencia3">Usa estrategias y procedimientos para encontrar reglas generales</li>
+          <li class="highlight-competencia4">Argumenta afirmaciones sobre relaciones de cambio y equivalencia</li>
+         </ul></td>
+        <td class="capacidades-cell">
+         <ul>
+          <li class="highlight-competencia1">Modela objetos con formas geométricas y sus transformaciones</li>
+          <li class="highlight-competencia2">Comunica su comprensión sobre las formas y relaciones geométricas.</li>
+          <li class="highlight-competencia3">Usa estrategias y procedimientos para orientarse en el espacio.</li>
+          <li class="highlight-competencia4">Argumenta afirmaciones sobre relaciones geométricas</li>
+         </ul></td>
+        <td class="capacidades-cell">
+         <ul>
+          <li class="highlight-competencia1">Representa datos con gráficos y medidas estadísticas o probabilísticas</li>
+          <li class="highlight-competencia2">Comunica la comprensión de los conceptos estadísticos y probabilísticos</li>
+          <li class="highlight-competencia3">Usa estrategias y procedimientos para recopilar y procesar datos</li>
+          <li class="highlight-competencia4">Sustenta conclusiones o decisiones en base a información obtenida</li>
+         </ul></td>
+       </tr><!-- ROW 4: DESEMPEÑOS -->
+       <tr>
+        <td class="section-label" style="width: 18%;">DESEMPEÑOS</td>
+        <td class="desempenios-cell">
+         <div class="grado-container">
+          <div class="grado-section"><span class="grado-label">3° GRADO</span>
+           <div class="grado-content">
+            <ul>
+             <li class="highlight-competencia1">Traduce una o más acciones de agregar, quitar, igualar, repetir cantidades, combinar colecciones identificadas en problemas; a expresiones de adición, sustracción, multiplicación y división, con números naturales; al plantear y resolver problemas.</li>
+             <li class="highlight-competencia2">Expresa su comprensión de la centena como unidad superior, del valor de posición de un dígito en números de tres cifras y los representa mediante equivalencias, de la comparación de cantidades; de los números pares e impares; así como de la propiedad conmutativa de la adición, del significado de la multiplicación y división, y de la relación inversa entre operaciones. Para esto usa diversas representaciones y lenguaje matemático.</li>
+             <li class="highlight-competencia3">Emplea estrategias heurísticas, estrategias de cálculo mental como: descomposiciones aditivas y multiplicativas, multiplicación por 10, completar decenas o centenas y redondeos; así como el cálculo escrito y otros procedimientos. Mide la masa y el tiempo, usando unidades convencionales y no convencionales (kilogramo – horas exactas).</li>
+             <li class="highlight-competencia4">Realiza afirmaciones sobre operaciones inversas con números naturales y las relaciones que observa entre expresiones numéricas (Por ejemplo: 200 U = 20D = 2 C) y entre las operaciones, las prueba con material concreto. Explica su proceso de resolución.</li>
+            </ul>
+           </div>
+          </div>
+          <div class="grado-section"><span class="grado-label">4° GRADO</span>
+           <div class="grado-content">
+            <ul>
+             <li class="highlight-competencia1">Traduce una o más acciones de agregar, quitar, igualar, repetir o repartir cantidades, combinar colecciones; así como de partir y repartir una unidad en partes iguales, identificadas en problemas; a expresiones de adición, sustracción, multiplicación y división, con números naturales y expresiones de adición y sustracción, con fracciones usuales; al plantear y resolver problemas.</li>
+             <li class="highlight-competencia2">Expresa su comprensión del valor de posición de un dígito en números de hasta cuatro cifras y los representa mediante equivalencias; expresa mediante representaciones, la comprensión de las nociones de multiplicación, sus propiedades conmutativa y asociativa, y las nociones de la división (como reparto y agrupación), Representa de diversas formas su comprensión de la noción de fracción como parte de la unidad y las equivalencias entre fracciones usuales. Para esto usa lenguaje numérico.</li>
+             <li class="highlight-competencia3">Emplea estrategias heurísticas, estrategias de cálculo mental como el uso de las propiedades de las operaciones, descomposiciones aditivas y multiplicativas, completar centenas, el redondeo a múltiplos de 10, equivalencias entre fracciones, así como el cálculo escrito y otros procedimientos. Mide de manera exacta o aproximada la masa y el tiempo, seleccionando unidades convencionales (kilogramo, gramo, año, hora, media hora y cuarto de hora).</li>
+             <li class="highlight-competencia4">Realiza afirmaciones sobre operaciones inversas con números naturales, y sobre relaciones entre naturales y fracciones; las justifica en base a ejemplos concretos y sus conocimientos matemáticos. Así también, justifica sus procesos de resolución.</li>
+            </ul>
+           </div>
+          </div>
+         </div></td>
+        <td class="desempenios-cell">
+         <div class="grado-container">
+          <div class="grado-section"><span class="grado-label">3° GRADO</span>
+           <div class="grado-content">
+            <ul>
+             <li class="highlight-competencia1">Traduce equivalencias, regularidades y cambios de una magnitud con respecto al paso del tiempo; a igualdades que contienen adiciones, sustracciones o multiplicaciones; a tablas o dibujos; o a patrones de repetición (con criterios perceptuales o de cambio de posición) o a patrones aditivos (con números de hasta 3 cifras); al plantear y resolver problemas.</li>
+             <li class="highlight-competencia2">Expresa su comprensión de la equivalencia y de la igualdad, representa un patrón de distinta manera, y describe el cambio de una magnitud con respecto al tiempo. Para esto usa lenguaje cotidiano y diversas representaciones. Por ejemplo: Representar el mismo patrón de diferentes maneras: triángulo, rectángulo, triángulo como ABA, ABA, ABA.</li>
+             <li class="highlight-competencia3">Emplea estrategias heurísticas y estrategias de cálculo como la descomposición aditiva y otras, para encontrar equivalencias, mantener la igualdad ("equilibrio"), encontrar relaciones de cambio entre dos magnitudes o continuar, completar y crear patrones.</li>
+             <li class="highlight-competencia4">Hace afirmaciones y explica lo que sucede al modificar las cantidades que intervienen en una relación de igualdad y cómo equiparar dos cantidades, lo que debe considerar para continuar o completar el patrón, las semejanzas que encuentra en dos versiones del mismo patrón usando ejemplos concretos. Así también, explica su proceso de resolución. Por ejemplo: si quito 2 kilos en este platillo de la balanza, se perderá el equilibrio.</li>
+            </ul>
+           </div>
+          </div>
+          <div class="grado-section"><span class="grado-label">4° GRADO</span>
+           <div class="grado-content">
+            <ul>
+             <li class="highlight-competencia1">Traduce equivalencias (dos relacionadas), regularidades y el cambio de una magnitud con respecto de otra, identificadas en problemas; a igualdades que contienen adiciones, sustracciones, multiplicaciones o divisiones; a tablas o dibujos; a patrones de repetición (que combinan criterios perceptuales y un criterio geométrico de simetría) o a patrones aditivos y patrones aditivos o multiplicativos (con números de hasta cuatro cifras); al plantear y resolver problemas.</li>
+             <li class="highlight-competencia2">Expresa su comprensión de la regla de formación de un patrón, de la igualdad (con un término desconocido) y del signo igual, distinguiéndolo de su uso en el resultado de una operación; así también describe la relación de cambio de una magnitud con respecto de otra. Para esto, usa lenguaje algebraico (íconos y operaciones) y diversas representaciones.</li>
+             <li class="highlight-competencia3">Emplea estrategias heurísticas o estrategias de cálculo, para encontrar equivalencias, completar, crear o continuar patrones o para encontrar relaciones de cambio entre dos magnitudes.</li>
+             <li class="highlight-competencia4">Hace afirmaciones sobre la equivalencia entre expresiones (propiedades de la igualdad, aditiva y multiplicativa) y regularidades en sus variaciones, las relaciones de cambio entre magnitudes, así como sobre los números o elementos que siguen en un patrón, justificándolas con sus experiencias concretas. Así también, justifica sus procesos de resolución.</li>
+            </ul>
+           </div>
+          </div>
+         </div></td>
+        <td class="desempenios-cell">
+         <div class="grado-container">
+          <div class="grado-section"><span class="grado-label">3° GRADO</span>
+           <div class="grado-content">
+            <ul>
+             <li class="highlight-competencia1">Modela características geométricas de los objetos del entorno, identificados en problemas; con formas bidimensionales y tridimensionales (cuerpos redondos y compuestos) y sus elementos; así como datos de ubicación y recorridos de objetos, a cuadrículas y croquis.</li>
+             <li class="highlight-competencia2">Describe la comprensión de formas bidimensionales (número de lados, vértices, eje de simetría) y tridimensionales; Traza y describe desplazamientos y posiciones. Para esto usa lenguaje geométrico, diferentes puntos de referencia y diversas representaciones concretas o gráficas.</li>
+             <li class="highlight-competencia3">Emplea estrategias heurísticas y procedimientos como la composición y descomposición, el doblado, el recorte, y diversos recursos para construir formas y figuras simétricas (a partir de instrucciones escritas u orales). Así mismo, usa diversas estrategias para medir de manera exacta o aproximada (estimar) la longitud (centímetro, metro), contorno de una figura, superficie (unidades patrón) y capacidad (unidades arbitrarias) de los objetos; empleando la unidad de medida, no convencional o convencional, según convenga, así como algunos instrumentos de medición.</li>
+             <li class="highlight-competencia4">Explica con ejemplos concretos o dibujos, algunas propiedades de las formas, su composición o descomposición; así como el proceso seguido (Por ejemplo: Todos los cuadrados se pueden formar con dos triángulos iguales).</li>
+            </ul>
+           </div>
+          </div>
+          <div class="grado-section"><span class="grado-label">4° GRADO</span>
+           <div class="grado-content">
+            <ul>
+             <li class="highlight-competencia1">Modela características geométricas de los objetos identificados en problemas; con formas bidimensionales (polígonos) y tridimensionales (cubos y prismas de base cuadrangular) y sus elementos. Así como datos de ubicación y desplazamientos de objetos a posiciones a cuadriculas y croquis.</li>
+             <li class="highlight-competencia2">Describe la comprensión de cubo, prisma de base cuadrangular y polígono a partir de reconocer elementos, y líneas paralelas y perpendiculares. Así mismo describe posiciones de objetos en el cuadriculado usando puntos de referencia, los representa en croquis. También representa de diversas formas, la traslación de una figura plana en el plano cartesiano. Todo ello lo hace usando lenguaje geométrico.</li>
+             <li class="highlight-competencia3">Emplea estrategias y procedimientos como la composición y descomposición, así como el uso de las cuadrículas; para construir formas simétricas, ubicar objetos y trasladar figuras, usando recursos. Así también, usa diversas estrategias para medir, de manera exacta o aproximada (estimar), la medida de los ángulos respecto al ángulo recto, la longitud (perímetro, metro y centímetro), la superficie (unidades patrón) y la capacidad (litro y fracciones) de los objetos y hace conversiones de unidades de longitud. Emplea la unidad de medida, convencional o no convencional, según convenga, así como algunos instrumentos de medición (cinta métrica, regla, envases o recipientes).</li>
+             <li class="highlight-competencia4">Elabora afirmaciones sobre algunas relaciones entre elementos de las formas, su desarrollo en el plano y sobre sus atributos medibles. Así mismo explica sus semejanzas y diferencias con ejemplos concretos o dibujos con base en su exploración o visualización, usando razonamiento inductivo. Así también, explica el proceso seguido. Por ejemplo:" Un cubo se puede construir con una plantilla que contenga 6 cuadrados del mismo tamaño". "Podemos medir la superficie de la pizarra midiendo solo el largo y ancho; y multiplicando ambas cantidades".</li>
+            </ul>
+           </div>
+          </div>
+         </div></td>
+        <td class="desempenios-cell">
+         <div class="grado-container">
+          <div class="grado-section"><span class="grado-label">3° GRADO</span>
+           <div class="grado-content">
+            <ul>
+             <li class="highlight-competencia1">Elabora pictogramas verticales y horizontales (el símbolo representa más de una unidad) y gráficos de barras horizontales (simples y escala dada de 2 en 2, 5 en 5 y 10 en 10). Para esto clasifica datos cualitativos (por ejemplo: color de ojos: pardos, negros; profesión: médico, abogado, etc.) y cuantitativos discretos (por ejemplo: número de hermanos: 3, 2; cantidad de goles: 2, 4, 5, etc.), relacionados con un tema de estudio.</li>
+             <li class="highlight-competencia2">Interpreta información contenida en tablas de frecuencia simples, gráficos de barras o pictogramas. Expresa la ocurrencia de acontecimientos cotidianos usando nociones de seguro, posible e imposible.</li>
+             <li class="highlight-competencia3">Emplea procedimientos de recolección y organización de datos usando encuestas, entrevistas sencillas, tablas de frecuencia, para resolver problemas estadísticos.</li>
+             <li class="highlight-competencia4">Toma decisiones y elabora algunas conclusiones a partir de la información obtenida en el análisis de datos.</li>
+            </ul>
+           </div>
+          </div>
+          <div class="grado-section"><span class="grado-label">4° GRADO</span>
+           <div class="grado-content">
+            <ul>
+             <li class="highlight-competencia1">Elabora tablas de frecuencia simples, pictogramas verticales y horizontales (cada símbolo representa más de una unidad) gráficos de barras con escala dada (múltiplos de 10). Para esto clasifica datos cualitativos (por ejemplo: color de ojos: pardos, negros; profesión: médico, abogado, etc.) y cuantitativos discretos (por ejemplo: número de hermanos: 3, 2; cantidad de goles: 2, 4, 5, etc.) relacionados con un tema de estudio y con experimentos aleatorios.</li>
+             <li class="highlight-competencia2">Interpreta información contenida en gráficos de barras simples y dobles, tablas de doble entrada y pictogramas, comparando frecuencias y usando el significado de la moda de un conjunto de datos; Expresa la ocurrencia de sucesos cotidianos usando las nociones de seguro, más probable, menos probable.</li>
+             <li class="highlight-competencia3">Recolecta datos con encuestas sencillas y entrevistas cortas con preguntas adecuadas y las registra en tablas de frecuencia simples, para resolver problemas estadísticos.</li>
+             <li class="highlight-competencia4">Toma decisiones y elabora algunas conclusiones a partir de la información obtenida en el análisis de datos.</li>
+            </ul>
+           </div>
+          </div>
+         </div></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+   </div>
+  </div>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9ec635c094c4952b',t:'MTc3NjIwNjQwMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

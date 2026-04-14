@@ -1,0 +1,737 @@
+<!doctype html>
+<html lang="es" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pensamiento Matemático</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { 
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: #0f1419;
+      color: #f0f2f5;
+      font-family: 'Geist', sans-serif;
+    }
+    .portada {
+      background: white;
+      border-bottom: 4px solid #cc0000;
+      padding: 40px 20px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 35px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .portada-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 35px;
+    }
+
+    .logo {
+      width: 110px;
+      height: 110px;
+      background: linear-gradient(135deg, #cc0000 0%, #990000 100%);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 22px;
+      border-radius: 10px;
+      flex-shrink: 0;
+    }
+
+    .info-institucional {
+      flex: 1;
+    }
+
+    .info-institucional h2 {
+      margin: 0 0 15px 0;
+      color: #1a1a1a;
+      font-size: 26px;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+
+    .info-institucional p {
+      margin: 8px 0;
+      color: #333;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .info-estudiante {
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .info-estudiante p {
+      margin: 8px 0;
+      color: #333;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .info-estudiante p strong {
+      color: #cc0000;
+      font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+      .portada-container {
+        flex-direction: column;
+        text-align: center;
+        gap: 25px;
+      }
+      
+      .info-estudiante {
+        text-align: center;
+      }
+      
+      .info-institucional h2 {
+        font-size: 22px;
+      }
+      
+      .info-institucional p,
+      .info-estudiante p {
+        font-size: 15px;
+      }
+      
+      .logo {
+        width: 90px;
+        height: 90px;
+        font-size: 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .portada {
+        padding: 20px 15px;
+      }
+      
+      .portada-container {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .info-institucional h2 {
+        font-size: 18px;
+      }
+      
+      .info-institucional p,
+      .info-estudiante p {
+        font-size: 13px;
+      }
+      
+      .logo {
+        width: 80px;
+        height: 80px;
+        font-size: 18px;
+      }
+    }
+    #app {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    .portada {
+      position: relative !important;
+    }
+    .app-header {
+      flex-shrink: 0;
+      width: 100%;
+      padding: 1.5rem;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .app-main {
+      flex: 1;
+      width: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+    .view-panel {
+      display: none;
+      width: 100%;
+      min-height: 100%;
+      padding: 1.5rem;
+      animation: slideIn 0.3s ease-out;
+    }
+    .view-panel.active {
+      display: flex;
+      flex-direction: column;
+    }
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    .cards-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      width: 100%;
+    }
+    @media (min-width: 768px) {
+      .cards-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    .card-flip {
+      perspective: 1000px;
+      cursor: pointer;
+      height: 22rem;
+      width: 100%;
+    }
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+    }
+    .card-flip.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 1.5rem;
+      text-align: center;
+      border-radius: 1.25rem;
+    }
+    .card-front {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    .card-back {
+      background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+      transform: rotateY(180deg);
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body><!-- Portada Universitaria -->
+  <div class="portada">
+   <div class="portada-container">
+    <img src="https://proveedoresutp.utp.edu.pe/img/logo-utp.d277c146.png" alt="Logo UTP" loading="lazy" onerror="console.error('Logo failed to load:', this.src); this.outerHTML='<div class=\'logo\'>UTP</div>';" style="width: 110px; height: 110px; object-fit: contain; flex-shrink: 0;">
+    <div class="info-institucional">
+     <h2 id="university-name">Universidad Tecnológica del Perú</h2>
+     <p id="faculty">Facultad de Educación</p>
+     <p id="course">Didáctica de la Matemática</p>
+     <p id="section">Sección 43871</p>
+    </div>
+    <div class="info-estudiante">
+     <p><strong id="student-name">Aaron Sixto Callupe Llallico</strong></p>
+     <p><strong id="student-name">Estefany Yeraldin Inga Moreno</strong></p>
+     <p><strong id="student-name">Ruth Ester Sanchez Verastegui</strong></p>
+     <p id="student-career">Estudiantes de Educación Primaria</p>
+     <p id="activity">Semana 1 - Actividad 1</p>
+    </div>
+   </div>
+  </div>
+  <div id="app"><!-- Header -->
+   <header class="app-header">
+    <h1 id="main-title" class="text-4xl font-bold mb-2">🧠 Pensamiento Matemático</h1>
+    <p class="text-gray-400 text-sm">Explorando el pensamiento matemático en niños</p>
+   </header><!-- Main Content -->
+   <main class="app-main"><!-- Menu Principal -->
+    <div id="menu" class="view-panel active">
+     <div class="max-w-2xl mx-auto w-full flex flex-col gap-4"><button onclick="navigateTo('section1')" class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 rounded-lg p-6 text-left transition transform hover:scale-105">
+       <div class="flex items-center gap-4"><span class="text-4xl">🔍</span>
+        <div class="flex-1">
+         <h3 class="text-xl font-bold text-white">Características del pensamiento</h3>
+         <p class="text-blue-200 text-sm mt-1">Identifica patrones y lógica</p>
+        </div><i data-lucide="arrow-right" class="w-6 h-6 text-blue-200"></i>
+       </div></button> <button onclick="navigateTo('section2')" class="bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 rounded-lg p-6 text-left transition transform hover:scale-105">
+       <div class="flex items-center gap-4"><span class="text-4xl">📊</span>
+        <div class="flex-1">
+         <h3 class="text-xl font-bold text-white">Concepciones de la matemática</h3>
+         <p class="text-emerald-200 text-sm mt-1">Idealista vs Constructivista</p>
+        </div><i data-lucide="arrow-right" class="w-6 h-6 text-emerald-200"></i>
+       </div></button> <button onclick="navigateTo('section3')" class="bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 rounded-lg p-6 text-left transition transform hover:scale-105">
+       <div class="flex items-center gap-4"><span class="text-4xl">✏️</span>
+        <div class="flex-1">
+         <h3 class="text-xl font-bold text-white">Creación de problemas</h3>
+         <p class="text-orange-200 text-sm mt-1">Ejemplo paso a paso</p>
+        </div><i data-lucide="arrow-right" class="w-6 h-6 text-orange-200"></i>
+       </div></button> <button onclick="navigateTo('section4')" class="bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-700 hover:to-rose-800 rounded-lg p-6 text-left transition transform hover:scale-105">
+       <div class="flex items-center gap-4"><span class="text-4xl">🧠</span>
+        <div class="flex-1">
+         <h3 class="text-xl font-bold text-white">Organizador Visual</h3>
+         <p class="text-rose-200 text-sm mt-1">Didáctica de la Matemática</p>
+        </div><i data-lucide="arrow-right" class="w-6 h-6 text-rose-200"></i>
+       </div></button>
+     </div>
+    </div><!-- Sección 1: Características -->
+    <div id="section1" class="view-panel">
+     <div class="max-w-3xl mx-auto w-full"><button onclick="navigateTo('menu')" class="flex items-center gap-2 text-gray-400 hover:text-white mb-6 transition"> <i data-lucide="arrow-left" class="w-5 h-5"></i> <span>Volver al menú</span> </button>
+      <h2 id="section1-title" class="text-3xl font-bold text-center mb-10">🔍 Características del pensamiento</h2>
+      <div class="cards-container"><!-- Card 1: Observación -->
+       <div class="card-flip" onclick="this.classList.toggle('flipped')">
+        <div class="card-inner">
+         <div class="card-face card-front" style="background: linear-gradient(135deg, #0ea5e9 0%, #0369a1 100%); box-shadow: 0 20px 40px rgba(6, 105, 161, 0.3);">
+          <div class="flex flex-col items-center justify-center h-full w-full px-4">
+           <h3 class="text-2xl font-bold text-white mb-3 text-center">Situación 01: Observación</h3>
+           <div class="text-6xl mb-4 animate-pulse">
+            👁️
+           </div>
+           <p class="text-sm text-cyan-100 text-center leading-relaxed mb-4">El docente muestra varias figuras geométricas</p>
+           <div class="flex justify-center gap-3 text-4xl"><span>🟟</span> <span>🟦</span> <span>🔵</span> <span>△</span>
+           </div>
+          </div>
+         </div>
+         <div class="card-face card-back" style="background: linear-gradient(135deg, #0369a1 0%, #0ea5e9 100%); box-shadow: 0 20px 40px rgba(6, 105, 161, 0.3);">
+          <div class="flex flex-col justify-center h-full w-full px-4 text-center overflow-y-auto">
+           <div class="text-5xl mb-2">
+            👁️
+           </div>
+           <p class="text-sm text-cyan-100 mb-3 font-semibold">Analiza características visibles</p>
+           <div class="space-y-2 text-sm text-left">
+            <p><strong class="text-cyan-200">🎯 Proceso:</strong><br class="hidden sm:block">
+              Observa y clasifica formas geométricas</p>
+            <p><strong class="text-cyan-200">🧠 Habilidad:</strong><br class="hidden sm:block">
+              Identifica lados rectos, esquinas y formas</p>
+            <p><strong class="text-cyan-200">📌 Resultado:</strong><br class="hidden sm:block">
+              Agrupa figuras según propiedades</p>
+           </div>
+          </div>
+         </div>
+        </div>
+       </div><!-- Card 2: Imaginación -->
+       <div class="card-flip" onclick="this.classList.toggle('flipped')">
+        <div class="card-inner">
+         <div class="card-face card-front" style="background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%); box-shadow: 0 20px 40px rgba(124, 58, 237, 0.3);">
+          <div class="flex flex-col items-center justify-center h-full w-full px-4">
+           <h3 class="text-2xl font-bold text-white mb-3 text-center">Situación 02: Imaginación</h3>
+           <div class="text-6xl mb-4 animate-pulse">
+            💭
+           </div>
+           <p class="text-sm text-purple-100 text-center leading-relaxed mb-4">Tienes 10 bloques, ¿cómo los organizas?</p>
+           <div class="flex justify-center gap-2 text-3xl"><span>🟩🟩🟩🟩🟩</span> <span>🟩🟩🟩🟩🟩</span>
+           </div>
+          </div>
+         </div>
+         <div class="card-face card-back" style="background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%); box-shadow: 0 20px 40px rgba(124, 58, 237, 0.3);">
+          <div class="flex flex-col justify-center h-full w-full px-4 text-center overflow-y-auto">
+           <div class="text-5xl mb-2">
+            💭
+           </div>
+           <p class="text-sm text-purple-100 mb-3 font-semibold">Crea formas de organizar</p>
+           <div class="space-y-2 text-sm text-left">
+            <p><strong class="text-purple-200">🎯 Proceso:</strong><br class="hidden sm:block">
+              Visualiza múltiples soluciones</p>
+            <p><strong class="text-purple-200">🧠 Habilidad:</strong><br class="hidden sm:block">
+              Imagina torres de diferentes alturas</p>
+            <p><strong class="text-purple-200">📌 Resultado:</strong><br class="hidden sm:block">
+              Descubre configuraciones posibles</p>
+           </div>
+          </div>
+         </div>
+        </div>
+       </div><!-- Card 3: Intuición -->
+       <div class="card-flip" onclick="this.classList.toggle('flipped')">
+        <div class="card-inner">
+         <div class="card-face card-front" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 20px 40px rgba(5, 150, 105, 0.3);">
+          <div class="flex flex-col items-center justify-center h-full w-full px-4">
+           <h3 class="text-2xl font-bold text-white mb-3 text-center">Situación 03: Intuición</h3>
+           <div class="text-6xl mb-4 animate-pulse">
+            ⚡
+           </div>
+           <p class="text-sm text-emerald-100 text-center leading-relaxed mb-4">19 caramelos + 1 más = ¿aproximadamente?</p>
+           <div class="flex justify-center gap-2 text-3xl"><span>🍬🍬🍬🍬🍬</span> <span>🍬🍬🍬🍬</span>
+           </div>
+          </div>
+         </div>
+         <div class="card-face card-back" style="background: linear-gradient(135deg, #059669 0%, #10b981 100%); box-shadow: 0 20px 40px rgba(5, 150, 105, 0.3);">
+          <div class="flex flex-col justify-center h-full w-full px-4 text-center overflow-y-auto">
+           <div class="text-5xl mb-2">
+            ⚡
+           </div>
+           <p class="text-sm text-emerald-100 mb-3 font-semibold">Estima sin cálculo exacto</p>
+           <div class="space-y-2 text-sm text-left">
+            <p><strong class="text-emerald-200">🎯 Proceso:</strong><br class="hidden sm:block">
+              Desarrolla sentido de cantidad</p>
+            <p><strong class="text-emerald-200">🧠 Habilidad:</strong><br class="hidden sm:block">
+              Estima "aproximadamente 20"</p>
+            <p><strong class="text-emerald-200">📌 Resultado:</strong><br class="hidden sm:block">
+              Respuesta rápida y cercana</p>
+           </div>
+          </div>
+         </div>
+        </div>
+       </div><!-- Card 4: Razonamiento lógico -->
+       <div class="card-flip" onclick="this.classList.toggle('flipped')">
+        <div class="card-inner">
+         <div class="card-face card-front" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); box-shadow: 0 20px 40px rgba(217, 119, 6, 0.3);">
+          <div class="flex flex-col items-center justify-center h-full w-full px-4">
+           <h3 class="text-2xl font-bold text-white mb-3 text-center">Situación 04: Razonamiento lógico</h3>
+           <div class="text-6xl mb-4 animate-pulse">
+            🧩
+           </div>
+           <p class="text-sm text-amber-100 text-center leading-relaxed mb-4">12 galletas entre 4 niños, ¿cuántas cada uno?</p>
+           <div class="flex justify-center gap-2 text-3xl"><span>🍪🍪🍪</span> <span>🍪🍪🍪</span> <span>🍪🍪🍪</span> <span>🍪🍪🍪</span>
+           </div>
+          </div>
+         </div>
+         <div class="card-face card-back" style="background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%); box-shadow: 0 20px 40px rgba(217, 119, 6, 0.3);">
+          <div class="flex flex-col justify-center h-full w-full px-4 text-center overflow-y-auto">
+           <div class="text-5xl mb-2">
+            🧩
+           </div>
+           <p class="text-sm text-amber-100 mb-3 font-semibold">Justifica con operaciones</p>
+           <div class="space-y-2 text-sm text-left">
+            <p><strong class="text-amber-200">🎯 Proceso:</strong><br class="hidden sm:block">
+              Usa operaciones para justificar</p>
+            <p><strong class="text-amber-200">🧠 Habilidad:</strong><br class="hidden sm:block">
+              Explica: 3+3+3+3=12</p>
+            <p><strong class="text-amber-200">📌 Resultado:</strong><br class="hidden sm:block">
+              Respuesta fundamentada y clara</p>
+           </div>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div><!-- Sección 2: Concepciones -->
+    <div id="section2" class="view-panel">
+     <div class="max-w-4xl mx-auto w-full"><button onclick="navigateTo('menu')" class="flex items-center gap-2 text-gray-400 hover:text-white mb-6 transition"> <i data-lucide="arrow-left" class="w-5 h-5"></i> <span>Volver al menú</span> </button>
+      <h2 id="section2-title" class="text-3xl font-bold text-center mb-10">📊 Concepciones de la matemática</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6"><!-- Idealista -->
+       <div class="bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl p-6 border-2 border-blue-300 shadow-lg hover:shadow-xl transition-shadow">
+        <div class="flex items-center gap-3 mb-6">
+         <div class="text-5xl">
+          🏛️
+         </div>
+         <div>
+          <h3 class="text-2xl font-bold text-white">Idealista</h3>
+          <p class="text-xs text-blue-100">Platónica</p>
+         </div>
+        </div>
+        <div class="space-y-3 text-sm">
+         <div class="bg-white bg-opacity-10 rounded-lg p-3 border-l-4 border-blue-200">
+          <p class="font-bold text-blue-100 text-xs uppercase mb-1">📐 Naturaleza</p>
+          <p class="text-white">La matemática existe por sí sola, ya está creada</p>
+         </div>
+         <div class="bg-white bg-opacity-10 rounded-lg p-3 border-l-4 border-blue-200">
+          <p class="font-bold text-blue-100 text-xs uppercase mb-1">👨‍🎓 Estudiante</p>
+          <p class="text-white">Aprende y memoriza lo que existe</p>
+         </div>
+         <div class="bg-white bg-opacity-10 rounded-lg p-3 border-l-4 border-blue-200">
+          <p class="font-bold text-blue-100 text-xs uppercase mb-1">👨‍🏫 Docente</p>
+          <p class="text-white">Transmite conocimientos establecidos</p>
+         </div>
+         <div class="bg-white bg-opacity-10 rounded-lg p-3 border-l-4 border-blue-200">
+          <p class="font-bold text-blue-100 text-xs uppercase mb-1">🌍 Realidad</p>
+          <p class="text-white">No es necesaria para aprenderla</p>
+         </div>
+         <div class="bg-white bg-opacity-10 rounded-lg p-3 border-l-4 border-blue-200">
+          <p class="font-bold text-blue-100 text-xs uppercase mb-1">📚 Método</p>
+          <p class="text-white">Teórico y abstracto</p>
+         </div>
+        </div>
+       </div><!-- Constructivista -->
+       <div class="bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-2xl p-6 border-2 border-emerald-300 shadow-lg hover:shadow-xl transition-shadow">
+        <div class="flex items-center gap-3 mb-6">
+         <div class="text-5xl">
+          🔨
+         </div>
+         <div>
+          <h3 class="text-2xl font-bold text-white">Constructivista</h3>
+          <p class="text-xs text-emerald-100">Piaget</p>
+         </div>
+        </div>
+        <div class="space-y-3 text-sm">
+         <div class="bg-white bg-opacity-10 rounded-lg p-3 border-l-4 border-emerald-200">
+          <p class="font-bold text-emerald-100 text-xs uppercase mb-1">📐 Naturaleza</p>
+          <p class="text-white">Es creada por el ser humano mediante interacción</p>
+         </div>
+         <div class="bg-white bg-opacity-10 rounded-lg p-3 border-l-4 border-emerald-200">
+          <p class="font-bold text-emerald-100 text-xs uppercase mb-1">👨‍🎓 Estudiante</p>
+          <p class="text-white">Descubre y construye el conocimiento activamente</p>
+         </div>
+         <div class="bg-white bg-opacity-10 rounded-lg p-3 border-l-4 border-emerald-200">
+          <p class="font-bold text-emerald-100 text-xs uppercase mb-1">👨‍🏫 Docente</p>
+          <p class="text-white">Guía y facilita el aprendizaje</p>
+         </div>
+         <div class="bg-white bg-opacity-10 rounded-lg p-3 border-l-4 border-emerald-200">
+          <p class="font-bold text-emerald-100 text-xs uppercase mb-1">🌍 Realidad</p>
+          <p class="text-white">Es fundamental para comprender la matemática</p>
+         </div>
+         <div class="bg-white bg-opacity-10 rounded-lg p-3 border-l-4 border-emerald-200">
+          <p class="font-bold text-emerald-100 text-xs uppercase mb-1">📚 Método</p>
+          <p class="text-white">Práctico, manipulativo y contextualizado</p>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div><!-- Sección 3: Creación de problemas -->
+    <div id="section3" class="view-panel">
+     <div class="max-w-2xl mx-auto w-full"><button onclick="navigateTo('menu')" class="flex items-center gap-2 text-gray-400 hover:text-white mb-6 transition"> <i data-lucide="arrow-left" class="w-5 h-5"></i> <span>Volver al menú</span> </button>
+      <h2 id="section3-title" class="text-3xl font-bold text-center mb-10">✏️ Creación de problemas</h2>
+      <div class="space-y-4"><!-- Situación -->
+       <div class="bg-blue-600 bg-opacity-20 border border-blue-400 border-opacity-40 rounded-lg p-4">
+        <p class="text-xs font-bold text-blue-300 uppercase mb-2">Situación</p>
+        <p class="text-white text-base">En una tienda escolar, cada cuaderno cuesta <strong>S/ 5</strong></p>
+       </div><!-- Pregunta -->
+       <div class="bg-purple-600 bg-opacity-20 border border-purple-400 border-opacity-40 rounded-lg p-4">
+        <p class="text-xs font-bold text-purple-300 uppercase mb-2">Pregunta</p>
+        <p class="text-white text-base">Si un estudiante compra <strong>6 cuadernos</strong>, ¿cuánto debe pagar?</p>
+       </div><!-- Operación -->
+       <div class="bg-pink-600 bg-opacity-20 border border-pink-400 border-opacity-40 rounded-lg p-4">
+        <p class="text-xs font-bold text-pink-300 uppercase mb-3">Operación</p>
+        <p class="text-center text-3xl font-bold text-white">5 × 6 = <span class="text-pink-300">30</span></p>
+       </div><!-- Respuesta -->
+       <div class="bg-emerald-600 bg-opacity-20 border border-emerald-400 border-opacity-40 rounded-lg p-4">
+        <p class="text-xs font-bold text-emerald-300 uppercase mb-2">Respuesta</p>
+        <p class="text-3xl font-bold text-emerald-300">S/ 30</p>
+       </div><!-- Contenidos -->
+       <div class="bg-orange-600 bg-opacity-20 border border-orange-400 border-opacity-40 rounded-lg p-4">
+        <p class="text-xs font-bold text-orange-300 uppercase mb-3">Contenidos matemáticos</p>
+        <div class="flex flex-wrap gap-2"><span class="px-3 py-1 bg-white bg-opacity-10 rounded-full text-xs text-gray-300">Multiplicación</span> <span class="px-3 py-1 bg-white bg-opacity-10 rounded-full text-xs text-gray-300">Resolución</span> <span class="px-3 py-1 bg-white bg-opacity-10 rounded-full text-xs text-gray-300">Cantidad-Precio</span>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div><!-- Sección 4: Organizador Visual -->
+    <div id="section4" class="view-panel">
+     <div class="max-w-5xl mx-auto w-full"><button onclick="navigateTo('menu')" class="flex items-center gap-2 text-gray-400 hover:text-white mb-6 transition"> <i data-lucide="arrow-left" class="w-5 h-5"></i> <span>Volver al menú</span> </button>
+      <h2 id="section4-title" class="text-3xl font-bold text-center mb-2">🧠 Organizador Visual</h2>
+      <p class="text-center text-gray-400 mb-8">Didáctica de la Matemática</p>
+      <div class="space-y-6"><!-- Tema Central -->
+       <div class="bg-gradient-to-r from-rose-600 to-pink-600 rounded-lg p-6 border-2 border-pink-300 shadow-lg text-center">
+        <p class="text-sm font-bold text-pink-100 uppercase mb-2">🔷 Tema Central</p>
+        <h3 class="text-3xl font-bold text-white">LA MATEMÁTICA Y SU ENSEÑANZA</h3>
+       </div><!-- Concepciones -->
+       <div class="bg-gradient-to-b from-blue-900 to-blue-800 rounded-lg p-6 border-l-4 border-blue-400">
+        <h3 class="text-2xl font-bold text-blue-100 mb-4 flex items-center gap-2"><span class="text-2xl">🔹</span> 1. CONCEPCIONES DE LA MATEMÁTICA</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+         <div class="bg-blue-800 bg-opacity-50 rounded-lg p-4 border-l-4 border-blue-300">
+          <p class="text-lg font-bold text-blue-200 mb-3">🔸 Idealista–Platónica</p>
+          <ul class="space-y-2 text-sm text-blue-100">
+           <li class="flex gap-2"><span>✓</span> <span>La matemática ya existe</span></li>
+           <li class="flex gap-2"><span>✓</span> <span>Es abstracta y exacta</span></li>
+           <li class="flex gap-2"><span>✓</span> <span>El docente transmite</span></li>
+           <li class="flex gap-2"><span>✓</span> <span>El estudiante recibe</span></li>
+           <li class="flex gap-2"><span>✓</span> <span>No se enfoca en la realidad</span></li>
+          </ul>
+         </div>
+         <div class="bg-emerald-800 bg-opacity-50 rounded-lg p-4 border-l-4 border-emerald-300">
+          <p class="text-lg font-bold text-emerald-200 mb-3">🔸 Constructivista</p>
+          <ul class="space-y-2 text-sm text-emerald-100">
+           <li class="flex gap-2"><span>✓</span> <span>La matemática se construye</span></li>
+           <li class="flex gap-2"><span>✓</span> <span>Surge de la experiencia</span></li>
+           <li class="flex gap-2"><span>✓</span> <span>El docente guía</span></li>
+           <li class="flex gap-2"><span>✓</span> <span>El estudiante descubre</span></li>
+           <li class="flex gap-2"><span>✓</span> <span>Se relaciona con la vida cotidiana</span></li>
+          </ul>
+         </div>
+        </div>
+       </div><!-- Matemática en la vida cotidiana -->
+       <div class="bg-gradient-to-b from-purple-900 to-purple-800 rounded-lg p-6 border-l-4 border-purple-400">
+        <h3 class="text-2xl font-bold text-purple-100 mb-4 flex items-center gap-2"><span class="text-2xl">🔹</span> 2. MATEMÁTICA EN LA VIDA COTIDIANA</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+         <div class="bg-purple-800 bg-opacity-50 rounded-lg p-4">
+          <p class="text-lg font-bold text-purple-200 mb-3">📌 Aplicaciones:</p>
+          <ul class="space-y-2 text-sm text-purple-100">
+           <li class="flex gap-2"><span>💰</span> <span>Mundo económico (compras, dinero)</span></li>
+           <li class="flex gap-2"><span>👥</span> <span>Mundo social (organización, reparto)</span></li>
+           <li class="flex gap-2"><span>📏</span> <span>Mundo físico (mediciones)</span></li>
+           <li class="flex gap-2"><span>🥗</span> <span>Mundo biológico (nutrición, cantidades)</span></li>
+          </ul>
+         </div>
+         <div class="bg-purple-800 bg-opacity-50 rounded-lg p-4">
+          <p class="text-lg font-bold text-purple-200 mb-3">📌 Importancia:</p>
+          <ul class="space-y-2 text-sm text-purple-100">
+           <li class="flex gap-2"><span>✔</span> <span>Permite resolver problemas reales</span></li>
+           <li class="flex gap-2"><span>✔</span> <span>Desarrolla el pensamiento lógico</span></li>
+           <li class="flex gap-2"><span>✔</span> <span>Se usa en actividades diarias</span></li>
+          </ul>
+         </div>
+        </div>
+       </div><!-- Rasgos Característicos -->
+       <div class="bg-gradient-to-b from-amber-900 to-amber-800 rounded-lg p-6 border-l-4 border-amber-400">
+        <h3 class="text-2xl font-bold text-amber-100 mb-4 flex items-center gap-2"><span class="text-2xl">🔹</span> 3. RASGOS CARACTERÍSTICOS DE LA MATEMÁTICA</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+         <div class="bg-amber-800 bg-opacity-50 rounded-lg p-3 text-center">
+          <p class="text-2xl mb-1">🎯</p>
+          <p class="text-sm font-bold text-amber-200">Modelización</p>
+          <p class="text-xs text-amber-100 mt-1">Representa la realidad</p>
+         </div>
+         <div class="bg-amber-800 bg-opacity-50 rounded-lg p-3 text-center">
+          <p class="text-2xl mb-1">🧩</p>
+          <p class="text-sm font-bold text-amber-200">Resolución</p>
+          <p class="text-xs text-amber-100 mt-1">De problemas</p>
+         </div>
+         <div class="bg-amber-800 bg-opacity-50 rounded-lg p-3 text-center">
+          <p class="text-2xl mb-1">🧠</p>
+          <p class="text-sm font-bold text-amber-200">Razonamiento</p>
+          <p class="text-xs text-amber-100 mt-1">Matemático</p>
+         </div>
+         <div class="bg-amber-800 bg-opacity-50 rounded-lg p-3 text-center">
+          <p class="text-2xl mb-1">💬</p>
+          <p class="text-sm font-bold text-amber-200">Lenguaje</p>
+          <p class="text-xs text-amber-100 mt-1">Y comunicación</p>
+         </div>
+         <div class="bg-amber-800 bg-opacity-50 rounded-lg p-3 text-center">
+          <p class="text-2xl mb-1">🏗️</p>
+          <p class="text-sm font-bold text-amber-200">Estructura</p>
+          <p class="text-xs text-amber-100 mt-1">Interna</p>
+         </div>
+         <div class="bg-amber-800 bg-opacity-50 rounded-lg p-3 text-center">
+          <p class="text-2xl mb-1">🔗</p>
+          <p class="text-sm font-bold text-amber-200">Relación</p>
+          <p class="text-xs text-amber-100 mt-1">Entre conceptos</p>
+         </div>
+         <div class="bg-amber-800 bg-opacity-50 rounded-lg p-3 text-center">
+          <p class="text-2xl mb-1">⚡</p>
+          <p class="text-sm font-bold text-amber-200">Exactitud</p>
+          <p class="text-xs text-amber-100 mt-1">Y aproximación</p>
+         </div>
+        </div>
+       </div><!-- Desarrollo del Pensamiento -->
+       <div class="bg-gradient-to-b from-teal-900 to-teal-800 rounded-lg p-6 border-l-4 border-teal-400">
+        <h3 class="text-2xl font-bold text-teal-100 mb-4 flex items-center gap-2"><span class="text-2xl">🔹</span> 4. DESARROLLO DEL PENSAMIENTO MATEMÁTICO</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+         <div class="bg-teal-800 bg-opacity-50 rounded-lg p-4 border-l-4 border-teal-300">
+          <div class="flex items-center gap-3 mb-2">
+           <span class="text-3xl">👁️</span>
+           <p class="text-lg font-bold text-teal-200">Observación</p>
+          </div>
+          <p class="text-sm text-teal-100">→ Identificar propiedades y características</p>
+         </div>
+         <div class="bg-teal-800 bg-opacity-50 rounded-lg p-4 border-l-4 border-teal-300">
+          <div class="flex items-center gap-3 mb-2">
+           <span class="text-3xl">💭</span>
+           <p class="text-lg font-bold text-teal-200">Imaginación</p>
+          </div>
+          <p class="text-sm text-teal-100">→ Crear diferentes soluciones o ideas</p>
+         </div>
+         <div class="bg-teal-800 bg-opacity-50 rounded-lg p-4 border-l-4 border-teal-300">
+          <div class="flex items-center gap-3 mb-2">
+           <span class="text-3xl">⚡</span>
+           <p class="text-lg font-bold text-teal-200">Intuición</p>
+          </div>
+          <p class="text-sm text-teal-100">→ Anticipar resultados</p>
+         </div>
+         <div class="bg-teal-800 bg-opacity-50 rounded-lg p-4 border-l-4 border-teal-300">
+          <div class="flex items-center gap-3 mb-2">
+           <span class="text-3xl">🧩</span>
+           <p class="text-lg font-bold text-teal-200">Razonamiento lógico</p>
+          </div>
+          <p class="text-sm text-teal-100">→ Explicar y justificar soluciones</p>
+         </div>
+        </div>
+       </div><!-- Conclusión -->
+       <div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg p-6 border-2 border-purple-300 shadow-lg">
+        <p class="text-sm font-bold text-purple-100 uppercase mb-3 text-center">🔚 Conclusión</p>
+        <p class="text-white text-center text-base leading-relaxed">La matemática es una herramienta para comprender y resolver problemas del entorno, que debe enseñarse de manera <strong>activa, contextualizada y significativa</strong>, promoviendo el desarrollo del <strong>pensamiento matemático</strong>.</p>
+       </div>
+      </div>
+     </div>
+    </div>
+   </main>
+  </div>
+  <script>
+    const defaultConfig = {
+      university_name: 'Universidad Tecnológica del Perú',
+      faculty: 'Facultad de Educación',
+      course: 'Didáctica de la Matemática',
+      section: 'Sección 43872',
+      student_name: 'Aaron Sixto Callupe Llallico',
+      student_career: 'Estudiantes de Educación Primaria',
+      activity: 'Semana 2 - Actividad 1',
+      main_title: 'Pensamiento Matemático',
+      section1_heading: 'Características del pensamiento',
+      section2_heading: 'Concepciones de la matemática',
+      section3_heading: 'Creación de problemas'
+    };
+
+    function navigateTo(sectionId) {
+      const panels = document.querySelectorAll('.view-panel');
+      panels.forEach(panel => panel.classList.remove('active'));
+      
+      const target = document.getElementById(sectionId);
+      if (target) {
+        target.classList.add('active');
+      }
+
+      // Reset all card flips when navigating
+      document.querySelectorAll('.card-flip.flipped').forEach(card => {
+        card.classList.remove('flipped');
+      });
+    }
+
+    window.elementSdk.init({
+      defaultConfig,
+      onConfigChange: async (config) => {
+        document.getElementById('university-name').textContent = config.university_name || defaultConfig.university_name;
+        document.getElementById('faculty').textContent = config.faculty || defaultConfig.faculty;
+        document.getElementById('course').textContent = config.course || defaultConfig.course;
+        document.getElementById('section').textContent = config.section || defaultConfig.section;
+        document.getElementById('student-name').textContent = config.student_name || defaultConfig.student_name;
+        document.getElementById('student-career').textContent = config.student_career || defaultConfig.student_career;
+        document.getElementById('activity').textContent = config.activity || defaultConfig.activity;
+        
+        document.getElementById('main-title').textContent = '🧠 ' + (config.main_title || defaultConfig.main_title);
+        
+        const s1 = document.getElementById('section1-title');
+        if (s1) s1.textContent = '🔍 ' + (config.section1_heading || defaultConfig.section1_heading);
+        
+        const s2 = document.getElementById('section2-title');
+        if (s2) s2.textContent = '📊 ' + (config.section2_heading || defaultConfig.section2_heading);
+        
+        const s3 = document.getElementById('section3-title');
+        if (s3) s3.textContent = '✏️ ' + (config.section3_heading || defaultConfig.section3_heading);
+      },
+      mapToCapabilities: () => ({
+        recolorables: [],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      }),
+      mapToEditPanelValues: (config) => new Map([
+        ['university_name', config.university_name || defaultConfig.university_name],
+        ['faculty', config.faculty || defaultConfig.faculty],
+        ['course', config.course || defaultConfig.course],
+        ['section', config.section || defaultConfig.section],
+        ['student_name', config.student_name || defaultConfig.student_name],
+        ['student_career', config.student_career || defaultConfig.student_career],
+        ['activity', config.activity || defaultConfig.activity],
+        ['main_title', config.main_title || defaultConfig.main_title],
+        ['section1_heading', config.section1_heading || defaultConfig.section1_heading],
+        ['section2_heading', config.section2_heading || defaultConfig.section2_heading],
+        ['section3_heading', config.section3_heading || defaultConfig.section3_heading]
+      ])
+    });
+
+    lucide.createIcons();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9ec61931222d56a6',t:'MTc3NjIwNTIzMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
