@@ -1,0 +1,937 @@
+<!doctype html>
+<html lang="es">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bloques Digitales - Resolver Problemas de Cantidad</title>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+    }
+
+    body {
+      font-family: 'Comic Sans MS', 'Trebuchet MS', sans-serif;
+      background: linear-gradient(135deg, #FF6B9D 0%, #FFC93C 25%, #6BCB77 50%, #4D96FF 75%, #FF6B9D 100%);
+      background-size: 400% 400%;
+      animation: gradientShift 8s ease infinite;
+      overflow: hidden;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .app-wrapper {
+      height: 100%;
+      width: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 20px 0;
+    }
+
+    .container-blocks {
+      background: white;
+      border-radius: 30px;
+      padding: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+      width: 95%;
+      max-width: 900px;
+      height: auto;
+      border: 4px solid white;
+      display: flex;
+      flex-direction: column;
+    }
+
+    @media (min-width: 768px) {
+      .container-blocks {
+        padding: 24px;
+      }
+    }
+
+    .problem-section {
+      margin-bottom: 16px;
+      text-align: center;
+      animation: fadeInDown 0.6s ease;
+    }
+
+    .problem-title {
+      font-size: 20px;
+      font-weight: bold;
+      background: linear-gradient(135deg, #FF6B9D 0%, #FFC93C 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+
+    @media (min-width: 768px) {
+      .problem-title {
+        font-size: 26px;
+        margin-bottom: 10px;
+      }
+    }
+
+    .problem-text {
+      font-size: 14px;
+      color: #2c3e50;
+      line-height: 1.6;
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+
+    @media (min-width: 768px) {
+      .problem-text {
+        font-size: 16px;
+        margin-bottom: 16px;
+      }
+    }
+
+    .blocks-display {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      justify-content: center;
+      margin: 12px 0;
+      min-height: 60px;
+      padding: 10px;
+      background: #f8f9fa;
+      border-radius: 15px;
+      border: 3px dashed #bdc3c7;
+    }
+
+    @media (min-width: 768px) {
+      .blocks-display {
+        gap: 6px;
+        min-height: 80px;
+        padding: 12px;
+      }
+    }
+
+    .block {
+      width: 28px;
+      height: 28px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 3px solid rgba(255, 255, 255, 0.5);
+      font-size: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: white;
+      position: relative;
+      animation: blockPulse 2s ease-in-out infinite;
+    }
+
+    @media (min-width: 768px) {
+      .block {
+        width: 36px;
+        height: 36px;
+        font-size: 8px;
+      }
+    }
+
+    @keyframes blockPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .block.initial {
+      background: linear-gradient(135deg, #4D96FF 0%, #00D9FF 100%);
+      box-shadow: 0 8px 16px rgba(77, 150, 255, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+      animation: blockPulse 2s ease-in-out infinite, blockGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes blockGlow {
+      0%, 100% { filter: drop-shadow(0 0 5px rgba(77, 150, 255, 0.5)); }
+      50% { filter: drop-shadow(0 0 15px rgba(77, 150, 255, 0.9)); }
+    }
+
+    .block.initial:hover {
+      transform: scale(1.25) rotate(5deg);
+      box-shadow: 0 12px 24px rgba(77, 150, 255, 0.7), inset 0 2px 4px rgba(255, 255, 255, 0.4);
+      animation: blockJump 0.6s ease-in-out;
+    }
+
+    @keyframes blockJump {
+      0%, 100% { transform: scale(1.25) rotate(5deg) translateY(0); }
+      50% { transform: scale(1.25) rotate(5deg) translateY(-15px); }
+    }
+
+    .block.removed {
+      background: linear-gradient(135deg, #FF6B6B 0%, #FF4444 100%);
+      box-shadow: 0 8px 16px rgba(255, 75, 75, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.2);
+      animation: blockRemoved 0.6s ease-out forwards;
+    }
+
+    @keyframes blockRemoved {
+      0% { transform: scale(1) rotate(0deg) translateY(0); opacity: 1; }
+      100% { transform: scale(0.3) rotate(-45deg) translateY(40px); opacity: 0; }
+    }
+
+    .block.selected {
+      background: linear-gradient(135deg, #FFD93D 0%, #FFA500 100%);
+      transform: scale(1.3) rotate(-10deg);
+      box-shadow: 0 12px 24px rgba(255, 165, 0, 0.7), inset 0 2px 4px rgba(255, 255, 255, 0.4);
+      animation: blockSelected 0.4s ease-out;
+    }
+
+    @keyframes blockSelected {
+      0% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(1.4) rotate(15deg); }
+      100% { transform: scale(1.3) rotate(-10deg); }
+    }
+
+    .operation-section {
+      background: #ecf0f1;
+      border-radius: 15px;
+      padding: 12px;
+      margin: 10px 0;
+      text-align: center;
+    }
+
+    .operation-text {
+      font-size: 16px;
+      font-weight: bold;
+      color: #2c3e50;
+      margin: 8px 0;
+      font-family: 'Courier New', monospace;
+      background: white;
+      padding: 10px;
+      border-radius: 10px;
+      border-left: 5px solid #667eea;
+    }
+
+    @media (min-width: 768px) {
+      .operation-text {
+        font-size: 18px;
+        padding: 12px;
+      }
+    }
+
+    .controls {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      margin: 12px 0;
+      flex-wrap: wrap;
+    }
+
+    @media (min-width: 768px) {
+      .controls {
+        gap: 10px;
+      }
+    }
+
+    .btn {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 18px;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media (min-width: 768px) {
+      .btn {
+        padding: 12px 20px;
+        font-size: 14px;
+      }
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    .btn:active::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #4D96FF 0%, #00D9FF 100%);
+      color: white;
+      animation: btnGlow 2s ease-in-out infinite;
+    }
+
+    @keyframes btnGlow {
+      0%, 100% { box-shadow: 0 6px 12px rgba(77, 150, 255, 0.3); }
+      50% { box-shadow: 0 10px 20px rgba(77, 150, 255, 0.6); }
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 0 12px 24px rgba(77, 150, 255, 0.5);
+    }
+
+    .btn-primary:active {
+      transform: translateY(-1px) scale(1.02);
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, #FFD93D 0%, #FFA500 100%);
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 0 12px 24px rgba(255, 165, 0, 0.4);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #6BCB77 0%, #4DB8A0 100%);
+      color: white;
+      animation: btnSuccessGlow 2s ease-in-out infinite;
+    }
+
+    @keyframes btnSuccessGlow {
+      0%, 100% { box-shadow: 0 6px 12px rgba(107, 203, 119, 0.3); }
+      50% { box-shadow: 0 10px 20px rgba(107, 203, 119, 0.6); }
+    }
+
+    .btn-success:hover {
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 0 12px 24px rgba(107, 203, 119, 0.5);
+    }
+
+    .purchase-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    @media (min-width: 640px) {
+      .purchase-options {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+      }
+    }
+
+    .purchase-card {
+      background: white;
+      border: 3px solid #bdc3c7;
+      border-radius: 12px;
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .purchase-card:hover {
+      border-color: #FF6B9D;
+      transform: translateY(-8px) scale(1.05);
+      box-shadow: 0 12px 24px rgba(255, 107, 157, 0.3);
+    }
+
+    .product-name {
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    @media (min-width: 768px) {
+      .product-name {
+        font-size: 13px;
+      }
+    }
+
+    .product-price {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FF6B9D;
+      animation: pricePulse 2s ease-in-out infinite;
+    }
+
+    @media (min-width: 768px) {
+      .product-price {
+        font-size: 18px;
+      }
+    }
+
+    .purchase-card.selected .product-price {
+      color: #fff;
+      animation: pricePopAnimation 0.4s ease;
+    }
+
+    @keyframes pricePulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    @keyframes pricePopAnimation {
+      0% { transform: scale(0.5); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .result-box {
+      background: linear-gradient(135deg, #6BCB77 0%, #4DB8A0 100%);
+      color: white;
+      border-radius: 25px;
+      padding: 12px 10px;
+      text-align: center;
+      margin: 10px 0;
+      display: none;
+      box-shadow: 0 20px 40px rgba(107, 203, 119, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .result-box.show {
+      display: block;
+      animation: resultPop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    @keyframes resultPop {
+      0% { transform: scale(0.5) rotate(-10deg); opacity: 0; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    @media (min-width: 768px) {
+      .result-box {
+        padding: 20px 15px;
+      }
+    }
+
+    .result-text {
+      font-size: 14px;
+      margin-bottom: 10px;
+      animation: slideInText 0.6s ease 0.2s both;
+    }
+
+    @media (min-width: 768px) {
+      .result-text {
+        font-size: 16px;
+      }
+    }
+
+    .result-answer {
+      font-size: 28px;
+      font-weight: bold;
+      font-family: 'Courier New', monospace;
+      animation: slideInText 0.6s ease 0.4s both;
+    }
+
+    @media (min-width: 768px) {
+      .result-answer {
+        font-size: 36px;
+      }
+    }
+
+    @keyframes slideInText {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .stage-indicator {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin: 12px 0;
+    }
+
+    .stage-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #bdc3c7;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    @media (min-width: 768px) {
+      .stage-dot {
+        width: 16px;
+        height: 16px;
+      }
+    }
+
+    .stage-dot.active {
+      background: linear-gradient(135deg, #FF6B9D 0%, #FFC93C 100%);
+      transform: scale(1.3);
+      box-shadow: 0 4px 12px rgba(255, 107, 157, 0.5);
+      animation: dotPulse 0.6s ease;
+    }
+
+    .explanation {
+      background: linear-gradient(135deg, #E3F2FD 0%, #F3E5F5 100%);
+      border-left: 6px solid #4D96FF;
+      padding: 10px;
+      border-radius: 15px;
+      margin: 8px 0;
+      font-size: 13px;
+      color: #2c3e50;
+      line-height: 1.5;
+      font-weight: 500;
+      animation: slideInLeft 0.6s ease;
+    }
+
+    @media (min-width: 768px) {
+      .explanation {
+        padding: 12px;
+        font-size: 14px;
+      }
+    }
+
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .icon-large {
+      font-size: 40px;
+      margin: 8px 0;
+      animation: iconBounce 0.8s ease;
+    }
+
+    @media (min-width: 768px) {
+      .icon-large {
+        font-size: 48px;
+        margin: 12px 0;
+      }
+    }
+
+    @keyframes iconBounce {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-20px) scale(1.1); }
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="https://cdn.tailwindcss.com/3.4.17" type="text/javascript"></script>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+ </head>
+ <body>
+  <div class="app-wrapper">
+   <div class="container-blocks">
+    <!-- SECCIÓN DE INFORMACIÓN PEDAGÓGICA -->
+    <div id="info-section" style="display: block;">
+     <div style="text-align: center; margin-bottom: 30px;">
+      <h1 style="font-size: 36px; font-weight: bold; color: #667eea; margin-bottom: 10px;">📚 Bloques Digitales para Resolver Problemas de Cantidad</h1>
+     </div><!-- Información Curricular -->
+     <div style="margin-bottom: 25px; overflow-x: auto;">
+      <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+       <tbody>
+        <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+         <td style="padding: 12px 16px; font-weight: bold; border-right: 1px solid rgba(255,255,255,0.2); width: 25%;">Grado</td>
+         <td style="padding: 12px 16px;">3.º de Educación Primaria</td>
+        </tr>
+        <tr style="background: #f8f9fa; border-top: 1px solid #ecf0f1;">
+         <td style="padding: 12px 16px; font-weight: bold; border-right: 1px solid #ecf0f1;">Ciclo</td>
+         <td style="padding: 12px 16px;">Ciclo IV</td>
+        </tr>
+        <tr style="background: white; border-top: 1px solid #ecf0f1;">
+         <td style="padding: 12px 16px; font-weight: bold; border-right: 1px solid #ecf0f1;">Área</td>
+         <td style="padding: 12px 16px;">Matemática</td>
+        </tr>
+        <tr style="background: #f8f9fa; border-top: 1px solid #ecf0f1;">
+         <td style="padding: 12px 16px; font-weight: bold; border-right: 1px solid #ecf0f1;">Competencia</td>
+         <td style="padding: 12px 16px;">Resuelve problemas de cantidad</td>
+        </tr>
+        <tr style="background: white; border-top: 1px solid #ecf0f1;">
+         <td style="padding: 12px 16px; font-weight: bold; border-right: 1px solid #ecf0f1;">Capacidad</td>
+         <td style="padding: 12px 16px;">Traduce cantidades a expresiones numéricas</td>
+        </tr>
+        <tr style="background: #f8f9fa; border-top: 1px solid #ecf0f1;">
+         <td style="padding: 12px 16px; font-weight: bold; border-right: 1px solid #ecf0f1; vertical-align: top;">Desempeño</td>
+         <td style="padding: 12px 16px;">Establece relaciones entre datos y acciones de agregar, quitar, juntar, comparar e igualar cantidades; y las transforma en expresiones numéricas (suma y resta) con números naturales, utilizando diversas representaciones como material concreto, gráfico y simbólico.</td>
+        </tr>
+       </tbody>
+      </table>
+     </div><!-- Descripción -->
+     <div style="background: #e8f4f8; border-left: 5px solid #667eea; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+      <h2 style="color: #667eea; font-size: 20px; margin-bottom: 12px;">🎯 Descripción del Material</h2>
+      <p style="color: #2c3e50; line-height: 1.8; margin: 0;">Este material presenta cantidades (hasta tres cifras) a través de bloques organizados en unidades y decenas, los cuales cambian de color cuando el estudiante realiza una acción. De esta manera, el estudiante puede visualizar el proceso de "quitar" o "restar", facilitando la comprensión de la operación.</p>
+     </div><!-- Cómo se emplea -->
+     <div style="background: #f0e8f8; border-left: 5px solid #764ba2; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+      <h2 style="color: #764ba2; font-size: 20px; margin-bottom: 12px;">📖 ¿Cómo se emplea el material?</h2>
+      <ol style="color: #2c3e50; line-height: 1.8; margin: 0; padding-left: 20px;">
+       <li style="margin-bottom: 10px;"><strong>El docente plantea una situación problemática:</strong> "María tiene 32 soles y compra un juguete que cuesta 12 soles. ¿Cuánto dinero le queda?"</li>
+       <li style="margin-bottom: 10px;"><strong>El estudiante observa 32 bloques</strong> (representando el dinero).</li>
+       <li style="margin-bottom: 10px;"><strong>Selecciona el producto</strong> (12 soles).</li>
+       <li style="margin-bottom: 10px;"><strong>Automáticamente 12 bloques cambian de color</strong> (dinero gastado).</li>
+       <li style="margin-bottom: 10px;"><strong>Los bloques restantes quedan visibles</strong> (dinero que queda).</li>
+       <li style="margin-bottom: 10px;"><strong>El estudiante responde:</strong> "¿Cuánto queda?" y explica su respuesta.</li>
+      </ol>
+     </div><!-- Modelo CPA -->
+     <div style="background: #fef5e8; border-left: 5px solid #f39c12; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+      <h2 style="color: #e67e22; font-size: 20px; margin-bottom: 12px;">🔄 Modelo CPA (Concreto → Pictórico → Abstracto)</h2>
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 15px;">
+       <div style="background: white; padding: 15px; border-radius: 8px; border: 2px solid #2ecc71;">
+        <div style="font-size: 24px; margin-bottom: 10px;">
+         🟢 Concreto
+        </div>
+        <p style="color: #2c3e50; font-size: 14px; margin: 0;">El estudiante interactúa con bloques digitales que simulan objetos reales.</p>
+       </div>
+       <div style="background: white; padding: 15px; border-radius: 8px; border: 2px solid #f39c12;">
+        <div style="font-size: 24px; margin-bottom: 10px;">
+         🟡 Pictórico
+        </div>
+        <p style="color: #2c3e50; font-size: 14px; margin: 0;">Los bloques representan gráficamente las cantidades y el proceso de resta.</p>
+       </div>
+       <div style="background: white; padding: 15px; border-radius: 8px; border: 2px solid #e74c3c;">
+        <div style="font-size: 24px; margin-bottom: 10px;">
+         🔴 Abstracto
+        </div>
+        <p style="color: #2c3e50; font-size: 14px; margin: 0;">El estudiante expresa: 32 - 12 = 20</p>
+       </div>
+      </div>
+     </div><!-- DUA -->
+     <div style="background: #f8e8f8; border-left: 5px solid #9b59b6; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+      <h2 style="color: #8e44ad; font-size: 20px; margin-bottom: 12px;">♿ Principios del DUA (Diseño Universal para el Aprendizaje)</h2>
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+       <div style="background: white; padding: 15px; border-radius: 8px;">
+        <div style="font-size: 20px; margin-bottom: 8px;">
+         👁️ Representación
+        </div>
+        <p style="color: #2c3e50; font-size: 14px; margin: 0;">Bloques visuales, números y situaciones contextualizadas.</p>
+       </div>
+       <div style="background: white; padding: 15px; border-radius: 8px;">
+        <div style="font-size: 20px; margin-bottom: 8px;">
+         ✍️ Acción y Expresión
+        </div>
+        <p style="color: #2c3e50; font-size: 14px; margin: 0;">Seleccionar, observar cambios y responder de forma oral o escrita.</p>
+       </div>
+       <div style="background: white; padding: 15px; border-radius: 8px;">
+        <div style="font-size: 20px; margin-bottom: 8px;">
+         ❤️ Implicación
+        </div>
+        <p style="color: #2c3e50; font-size: 14px; margin: 0;">Material interactivo, atractivo y motivador basado en situaciones reales.</p>
+       </div>
+      </div>
+     </div><!-- Botón Empezar -->
+     <div style="text-align: center;">
+      <button id="start-btn" class="btn btn-primary" style="font-size: 18px; padding: 18px 40px;"> <i data-lucide="play-circle"></i> Empezar Juego </button>
+     </div>
+    </div><!-- SECCIÓN DE JUEGO INTERACTIVO -->
+    <div id="game-section" style="display: none;">
+     <!-- Indicador de etapas -->
+     <div class="stage-indicator">
+      <div class="stage-dot active" id="stage1"></div>
+      <div class="stage-dot" id="stage2"></div>
+      <div class="stage-dot" id="stage3"></div>
+     </div><!-- Sección del Problema -->
+     <div class="problem-section">
+      <div class="problem-title" id="problem-title">
+       Problema de Dinero
+      </div>
+      <div class="problem-text" id="problem-text">
+       María tiene 32 soles y decide comprar un juguete. ¿Cuánto dinero le queda?
+      </div>
+     </div><!-- Cantidad Inicial en Bloques -->
+     <div style="text-align: center; margin: 20px 0;">
+      <h3 style="color: #667eea; margin-bottom: 15px; font-size: 18px; font-weight: bold;">📦 Cantidad Inicial: <span id="initial-amount-text" style="color: #e74c3c;">32</span> soles</h3>
+     </div>
+     <div class="blocks-display" id="blocks-container"></div>
+     <div class="explanation" id="explanation-1">
+      👆 Los bloques azules representan el dinero que María tiene. ¡Elige un producto para comprar!
+     </div><!-- Opciones de Compra -->
+     <div style="margin: 30px 0;">
+      <h3 style="color: #2c3e50; text-align: center; margin-bottom: 15px; font-size: 18px; font-weight: bold;">🛍️ ¿Qué deseas comprar?</h3>
+      <div class="purchase-options" id="purchase-options"></div>
+     </div><!-- Operación Matemática -->
+     <div class="operation-section">
+      <div style="font-size: 14px; color: #7f8c8d; margin-bottom: 10px;">
+       OPERACIÓN
+      </div>
+      <div class="operation-text" id="operation-text">
+       32 - 0 = ?
+      </div><input type="number" id="result-input" placeholder="¿Cuál es el resultado?" style="margin-top: 15px; padding: 12px; font-size: 16px; border: 2px solid #667eea; border-radius: 10px; width: 100%; max-width: 200px; text-align: center; display: none;">
+     </div><!-- Controles -->
+     <div class="controls">
+      <button class="btn btn-primary" id="remove-btn" style="display: none;"> <i data-lucide="trash-2"></i> Quitar Seleccionados </button> <button class="btn btn-success" id="check-btn" style="display: none;"> <i data-lucide="check-circle"></i> Verificar Respuesta </button> <button class="btn btn-secondary" id="reset-btn"> <i data-lucide="rotate-ccw"></i> Reiniciar </button> <button class="btn btn-secondary" id="back-btn"> <i data-lucide="arrow-left"></i> Volver a Información </button>
+     </div><!-- Resultado -->
+     <div class="result-box" id="result-box">
+      <div class="icon-large">
+       🎉
+      </div>
+      <div class="result-text">
+       ¡Excelente! Resolviste correctamente:
+      </div>
+      <div class="result-answer" id="result-answer">
+       32 - 12 = 20
+      </div>
+      <div style="margin-top: 15px; font-size: 16px;">
+       María le quedan <strong id="remaining-money">20 soles</strong>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
+    // Configuración por defecto
+    const defaultConfig = {
+      problem_title: "Problema de Dinero",
+      problem_text: "María tiene 32 soles y decide comprar un juguete. ¿Cuánto dinero le queda?",
+      initial_amount: "32"
+    };
+
+    let config = { ...defaultConfig };
+
+    // Estado de la aplicación
+    let state = {
+      initialAmount: 32,
+      removedBlocks: [],
+      selectedAmount: 0,
+      selectedProduct: null,
+      isCompleted: false
+    };
+
+    const products = [
+      { id: 1, name: "Juguete", price: 12, emoji: "🧸" },
+      { id: 2, name: "Libro", price: 8, emoji: "📚" },
+      { id: 3, name: "Pelota", price: 15, emoji: "⚽" },
+      { id: 4, name: "Crayones", price: 5, emoji: "🖍️" }
+    ];
+
+    function updateConfig(newConfig) {
+      config = newConfig;
+      state.initialAmount = parseInt(config.initial_amount) || 32;
+      resetGame();
+    }
+
+    function renderBlocks() {
+      const container = document.getElementById('blocks-container');
+      container.innerHTML = '';
+
+      for (let i = 1; i <= state.initialAmount; i++) {
+        const block = document.createElement('div');
+        block.className = 'block';
+
+        if (state.removedBlocks.includes(i)) {
+          block.classList.add('removed');
+        } else if (state.removedBlocks.length < state.selectedAmount && i > state.initialAmount - state.selectedAmount) {
+          block.classList.add('selected');
+        } else {
+          block.classList.add('initial');
+        }
+
+        block.textContent = i;
+
+        block.addEventListener('click', () => toggleBlock(i));
+        container.appendChild(block);
+      }
+
+      lucide.createIcons();
+    }
+
+    function toggleBlock(blockNum) {
+      if (state.isCompleted) return;
+
+      if (state.removedBlocks.includes(blockNum)) {
+        state.removedBlocks = state.removedBlocks.filter(b => b !== blockNum);
+      } else {
+        state.removedBlocks.push(blockNum);
+      }
+
+      state.removedBlocks.sort((a, b) => a - b);
+      updateUI();
+    }
+
+    function renderPurchaseOptions() {
+      const container = document.getElementById('purchase-options');
+      container.innerHTML = '';
+
+      products.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'purchase-card';
+        if (state.selectedProduct?.id === product.id) {
+          card.classList.add('selected');
+        }
+
+        card.innerHTML = `
+          <div style="font-size: 32px; margin-bottom: 10px;">${product.emoji}</div>
+          <div class="product-name">${product.name}</div>
+          <div class="product-price">${product.price} soles</div>
+        `;
+
+        card.addEventListener('click', () => selectProduct(product));
+        container.appendChild(card);
+      });
+    }
+
+    function selectProduct(product) {
+      if (state.isCompleted) return;
+
+      if (state.selectedProduct?.id === product.id) {
+        state.selectedProduct = null;
+        state.removedBlocks = [];
+      } else {
+        state.selectedProduct = product;
+        state.selectedAmount = product.price;
+        // Automáticamente seleccionar los bloques a quitar
+        state.removedBlocks = Array.from({ length: product.price }, (_, i) => state.initialAmount - i);
+      }
+
+      updateUI();
+    }
+
+    function updateUI() {
+      // Actualizar bloques
+      renderBlocks();
+      renderPurchaseOptions();
+
+      // Actualizar operación
+      const remaining = state.initialAmount - state.removedBlocks.length;
+      const operationText = `${state.initialAmount} - ${state.removedBlocks.length} = ?`;
+      document.getElementById('operation-text').textContent = operationText;
+
+      // Mostrar/ocultar elementos
+      if (state.removedBlocks.length > 0 && !state.isCompleted) {
+        document.getElementById('remove-btn').style.display = 'flex';
+        document.getElementById('result-input').style.display = 'block';
+        document.getElementById('check-btn').style.display = 'flex';
+      } else {
+        document.getElementById('remove-btn').style.display = 'none';
+        document.getElementById('result-input').style.display = 'none';
+        document.getElementById('check-btn').style.display = 'none';
+        document.getElementById('result-input').value = '';
+      }
+
+      // Actualizar explicación
+      const explanation = document.getElementById('explanation-1');
+      if (state.selectedProduct) {
+        explanation.textContent = `✅ Seleccionaste: ${state.selectedProduct.emoji} ${state.selectedProduct.name} (${state.selectedProduct.price} soles). Los bloques rojos se quitarán. ¡Ingresa el resultado en la operación!`;
+      } else {
+        explanation.textContent = `👆 Los bloques azules representan el dinero que María tiene. ¡Elige un producto para comprar!`;
+      }
+    }
+
+    function completeTransaction() {
+      state.isCompleted = true;
+      const remaining = state.initialAmount - state.removedBlocks.length;
+
+      // Mostrar resultado
+      document.getElementById('result-answer').textContent = `${state.initialAmount} - ${state.removedBlocks.length} = ${remaining}`;
+      document.getElementById('remaining-money').textContent = `${remaining} soles`;
+      document.getElementById('result-box').classList.add('show');
+
+      // Ocultar botones
+      document.getElementById('remove-btn').style.display = 'none';
+      document.getElementById('check-btn').style.display = 'none';
+      document.getElementById('result-input').style.display = 'none';
+
+      // Actualizar indicadores de etapa
+      document.getElementById('stage3').classList.add('active');
+
+      renderBlocks();
+    }
+
+    function checkAnswer() {
+      const userAnswer = parseInt(document.getElementById('result-input').value);
+      const correctAnswer = state.initialAmount - state.removedBlocks.length;
+
+      if (isNaN(userAnswer)) {
+        alert('Por favor ingresa un número');
+        return;
+      }
+
+      if (userAnswer === correctAnswer) {
+        completeTransaction();
+      } else {
+        alert(`❌ Incorrecto. El resultado es ${correctAnswer}, no ${userAnswer}. ¡Intenta de nuevo!`);
+        document.getElementById('result-input').value = '';
+      }
+    }
+
+    function resetGame() {
+      state = {
+        initialAmount: parseInt(config.initial_amount) || 32,
+        removedBlocks: [],
+        selectedAmount: 0,
+        selectedProduct: null,
+        isCompleted: false
+      };
+
+      document.getElementById('problem-title').textContent = config.problem_title;
+      document.getElementById('problem-text').textContent = config.problem_text;
+      document.getElementById('initial-amount-text').textContent = state.initialAmount;
+      document.getElementById('result-box').classList.remove('show');
+      document.getElementById('stage3').classList.remove('active');
+
+      updateUI();
+    }
+
+    // Función para mostrar la sección del juego
+    function startGame() {
+      document.getElementById('info-section').style.display = 'none';
+      document.getElementById('game-section').style.display = 'block';
+      resetGame();
+      window.scrollTo(0, 0);
+      lucide.createIcons();
+    }
+
+    // Función para volver a la información
+    function backToInfo() {
+      document.getElementById('game-section').style.display = 'none';
+      document.getElementById('info-section').style.display = 'block';
+      window.scrollTo(0, 0);
+      lucide.createIcons();
+    }
+
+    // Event Listeners
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('start-btn').addEventListener('click', startGame);
+      document.getElementById('back-btn').addEventListener('click', backToInfo);
+      document.getElementById('remove-btn').addEventListener('click', completeTransaction);
+      document.getElementById('check-btn').addEventListener('click', checkAnswer);
+      document.getElementById('reset-btn').addEventListener('click', resetGame);
+      document.getElementById('result-input').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') checkAnswer();
+      });
+
+      // Inicializar
+      renderPurchaseOptions();
+      renderBlocks();
+      lucide.createIcons();
+    });
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9f0193ede04bc2bd',t:'MTc3NjgyODkyMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
