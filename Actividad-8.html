@@ -132,6 +132,47 @@
         .btn-link:hover { background: #003d68; transform: translateY(-3px); box-shadow: 0 15px 20px rgba(0,80,136,0.3); }
 
         .tag { background: #e2e8f0; color: var(--primary); padding: 4px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 700; margin-right: 8px; }
+        @media (max-width: 767px) {
+    /* Ajuste de variables para móvil */
+    :root { --sidebar-width: 0px; }
+
+    /* Mueve el menú a la parte inferior */
+    .nav-sidebar {
+        bottom: 0; top: auto; width: 100vw; height: 70px;
+        flex-direction: row; gap: 5px; padding: 0 10px;
+        border-right: none; border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .nav-item { font-size: 0.55rem; padding: 5px 0; border-right: none !important; }
+    .nav-item.active { border-top: 4px solid var(--accent); background: rgba(255,255,255,0.05); }
+
+    /* Ajuste de áreas de contenido */
+    section { width: 100vw; margin-left: 0; padding: 30px 15px 100px 15px; }
+    .cover { margin-left: 0; }
+    .cover-box { padding: 20px; }
+    
+    /* Tipografía adaptable */
+    .cover h1 { font-size: 2.2rem; }
+    h2 { font-size: 1.8rem; }
+    
+    /* Grillas en una sola columna */
+    .grid-info { grid-template-columns: 1fr !important; }
+    .cover-details { grid-template-columns: 1fr !important; }
+    .card[style*="grid-column"] { grid-column: span 1 !important; }
+    
+    /* Timeline en vertical */
+    .timeline-step { flex-direction: column; gap: 10px; }
+    
+    /* Botones apilados */
+    .button-group { flex-direction: column; width: 100%; }
+    .btn-start, .btn-pdf { width: 100%; }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    /* Ajustes para Tablets */
+    section { padding: 40px 30px; }
+    .cover h1 { font-size: 3.5rem; }
+}
     </style>
 </head>
 <body>
