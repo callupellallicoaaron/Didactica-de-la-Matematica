@@ -66,6 +66,7 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
+            flex-shrink: 0;
         }
 
         .control-panel h2 {
@@ -131,6 +132,7 @@
             position: relative;
             box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
             overflow: hidden;
+            flex-shrink: 0;
         }
 
         /* GUÍA DE REFERENCIA (DERECHA) */
@@ -143,6 +145,7 @@
             position: relative;
             box-shadow: 0 4px 10px rgba(0,0,0,0.5);
             overflow: hidden;
+            flex-shrink: 0;
         }
 
         .guide-title {
@@ -202,6 +205,72 @@
             color: #777;
             margin-top: 15px;
             max-width: 800px;
+        }
+
+        /* ==========================================
+           REGLAS EXCLUSIVAS PARA VOLVERLO RESPONSIVE 
+           ========================================== */
+        @media (max-width: 1350px) {
+            .workspace-layout {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+            }
+            .control-panel {
+                width: 100%;
+                max-width: 540px;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .control-panel h2 {
+                width: 100%;
+                border-bottom: 1px dashed #444;
+                margin-bottom: 2px;
+            }
+            #info-pantalla {
+                flex-grow: 1;
+                min-height: auto;
+                height: 45px;
+            }
+            .control-panel .btn-accessible {
+                padding: 10px 15px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 580px) {
+            body {
+                padding: 8px;
+            }
+            .header h1 {
+                font-size: 20px;
+            }
+            /* Escalado dinámico por CSS transform para preservar el isomorfismo 1:1 intacto */
+            .game-board-left, .guide-board-right {
+                width: 100vw;
+                height: 100vw;
+                max-width: 540px;
+                max-height: 540px;
+                transform: scale(calc(window.innerWidth / 580)); 
+                transform-origin: top center;
+            }
+            /* Ajuste alternativo nativo por contenedor flexible si no soporta calc */
+            @supports (container-type: inline-size) {
+                .game-board-left, .guide-board-right {
+                    width: calc(100vw - 20px);
+                    height: calc(100vw - 20px);
+                }
+            }
+            .control-panel {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+            #info-pantalla {
+                width: 100%;
+            }
         }
     </style>
 </head>
