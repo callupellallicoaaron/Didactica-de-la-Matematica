@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Propuesta Didáctica: Desafío Tangram Digital - UTP</title>
+    <style>
+        :root {
+            --utp-red: #B22222;
+            --utp-blue: #002F6C;
+            --utp-light: #F4F6F9;
+            --utp-dark: #1A1A1A;
+            --accent-green: #27ae60;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--utp-light);
+            color: var(--utp-dark);
+            line-height: 1.6;
+        }
+
+        /* --- PORTADA INSTITUCIONAL UTP (Fiel a image_1eee26.png) --- */
+        .cover-page {
+            background: #ffffff;
+            padding: 30px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 4px solid var(--utp-red);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .brand-block {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .brand-block img {
+            height: 55px;
+            width: auto;
+        }
+
+        .brand-text h1 {
+            font-size: 1.8rem;
+            color: var(--utp-dark);
+            font-weight: 700;
+        }
+
+        .brand-text p {
+            font-size: 0.95rem;
+            color: #555;
+        }
+
+        .students-side {
+            text-align: right;
+        }
+
+        .students-side h2 {
+            font-size: 1.1rem;
+            color: var(--utp-red);
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .students-side p {
+            font-size: 0.9rem;
+            color: #333;
+            margin-bottom: 2px;
+        }
+
+        @media (max-width: 850px) {
+            .cover-page { flex-direction: column; text-align: center; gap: 20px; }
+            .brand-block { flex-direction: column; gap: 10px; }
+            .students-side { text-align: center; }
+        }
+
+        /* --- ESTRUCTURA DE LA INFOGRAFÍA --- */
+        .infographic-container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .info-section {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-left: 6px solid var(--utp-blue);
+        }
+
+        .info-section.red-profile {
+            border-left-color: var(--utp-red);
+        }
+
+        .info-section h3 {
+            color: var(--utp-blue);
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        .info-section.red-profile h3 {
+            color: var(--utp-red);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+
+        .badge-box {
+            background: var(--utp-light);
+            border: 1px solid #e0e0e0;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        .badge-box ul, .info-section ul {
+            margin-left: 20px;
+            padding-left: 5px;
+        }
+
+        /* --- ENTORNO INTERACTIVO TANGRAM --- */
+        .game-card {
+            background: #2c3e50;
+            color: white;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            margin-bottom: 25px;
+        }
+
+        .game-card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .instructions {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 12px 20px;
+            border-radius: 6px;
+            display: inline-block;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+            border: 1px solid rgba(255,255,255,0.15);
+            max-width: 800px;
+        }
+
+        .sandbox {
+            position: relative;
+            width: 100%;
+            height: 520px;
+            background: #22313f;
+            border: 3px dashed #34495e;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        /* SILUETA OBJETIVO TRADICIONAL (CUADRADO BASE DEL TANGRAM) */
+        .target-area {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed rgba(255, 255, 255, 0.4);
+            z-index: 1;
+        }
+
+        .target-hint {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 0.8rem;
+            text-align: center;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* COMPONENTES DE LAS PIEZAS */
+        .piece {
+            position: absolute;
+            cursor: move;
+            touch-action: none;
+            user-select: none;
+            z-index: 10;
+            transform-origin: center center;
+            transition: opacity 0.2s;
+        }
+
+        .piece.locked {
+            cursor: default !important;
+            pointer-events: none;
+            opacity: 0.9;
+            z-index: 5;
+        }
+
+        /* Definición matemática exacta mediante clip-path */
+        #tg1 {
+            width: 200px; height: 100px;
+            background: #e74c3c;
+            clip-path: polygon(0 100%, 50% 0, 100% 100%);
+        }
+        #tg2 {
+            width: 200px; height: 100px;
+            background: #3498db;
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+        }
+        #tm {
+            width: 141px; height: 141px;
+            background: #9b59b6;
+            clip-path: polygon(0 0, 100% 0, 0 100%);
+        }
+        #tp1 {
+            width: 100px; height: 50px;
+            background: #f1c40f;
+            clip-path: polygon(0 100%, 50% 0, 100% 100%);
+        }
+        #tp2 {
+            width: 100px; height: 50px;
+            background: #1abc9c;
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+        }
+        #square {
+            width: 100px; height: 100px;
+            background: #e67e22;
+            clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+        }
+        #romboide {
+            width: 150px; height: 50px;
+            background: #2ecc71;
+            clip-path: polygon(33.33% 0, 100% 0, 66.66% 100%, 0 100%);
+        }
+
+        #win-message {
+            display: none;
+            margin-top: 15px;
+            background: var(--accent-green);
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        footer {
+            background: var(--utp-blue);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 0.85rem;
+            margin-top: 30px;
+            border-top: 4px solid var(--utp-red);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PORTADA ACADÉMICA SEGÚN REQUERIMIENTOS E IMAGEN DE REFERENCIA (image_1eee26.png) -->
+    <header class="cover-page">
+        <div class="brand-block">
+            <img src="https://proveedoresutp.utp.edu.pe/img/logo-utp.d277c146.png" alt="Logo UTP">
+            <div class="brand-text">
+                <h1>Universidad Tecnológica del Perú</h1>
+                <p>Facultad de Educación • Didáctica de la Matemática • Semana 9</p>
+            </div>
+        </div>
+        <div class="students-side">
+            <h2>Estudiantes de Educación Primaria</h2>
+            <p>Helen Lizbeth Benavente Huerta</p>
+            <p>Aaron Sixto Callupe Llallico</p>
+            <p>Estéfany Yeraldin Inga Moreno</p>
+            <p>Ruth Ester Sanchez Verastegui</p>
+        </div>
+    </header>
+
+    <!-- CONTENIDO GENERAL EN FORMATO INFOGRAFÍA INTERACTIVA -->
+    <main class="infographic-container">
+
+        <!-- SECCIÓN 1: DATOS GENERALES -->
+        <section class="info-section">
+            <h3>📌 1. Datos Informativos de la Situación Didáctica</h3>
+            <div class="grid-2">
+                <div class="badge-box">
+                    <strong>Aplicación Geométrica:</strong><br>
+                    Formas geométricas (propiedades de polígonos) y Transformaciones en el plano (traslación y rotación).
+                </div>
+                <div class="badge-box">
+                    <strong>Medio Tecnológico:</strong><br>
+                    Material digital interactivo optimizado para su ejecución en computadoras de escritorio, celulares o tablets.
+                </div>
+                <div class="badge-box">
+                    <strong>Tamaño del Espacio (Gálvez, 1985):</strong><br>
+                    <strong>Microespacio:</strong> El entorno próximo al sujeto con objetos virtuales que son completamente manipulables de forma directa.
+                </div>
+                <div class="badge-box">
+                    <strong>Acciones Involucradas:</strong><br>
+                    Observar, copiar (reproducir posiciones), representar y comunicar propiedades espaciales.
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: FUNDAMENTACIÓN TEÓRICA -->
+        <section class="info-section red-profile">
+            <h3>🧠 2. Fundamentación Pedagógica (Sustentada en el Archivo UTP)</h3>
+            <div class="grid-2">
+                <div>
+                    <strong>Teoría del Desarrollo de Piaget:</strong>
+                    <p>Se asocia al <em>Estadio de Operaciones Concretas y Perfeccionamiento</em> (representación mediante imágenes mentales). El estudiante evoca y reproduce formas mediante la manipulación interactiva.</p>
+                    <br>
+                    <strong>Finalidad Didáctica:</strong>
+                    <ul>
+                        <li>Desarrollar el pensamiento espacial y la visualización.</li>
+                        <li>Superar el enfoque tradicional memorístico basado en fórmulas abstractas.</li>
+                        <li>Fomentar razonamientos inductivos basados en la experimentación directa.</li>
+                    </ul>
+                </div>
+                <div>
+                    <strong>Modelo de Van Hiele (Razonamiento Geométrico):</strong>
+                    <ul>
+                        <li><strong>Nivel 0 (Visualización):</strong> Reconocimiento global del cuadrado base y las siluetas por su aspecto físico exterior.</li>
+                        <li><strong>Nivel 1 (Análisis):</strong> Identificación de las propiedades individuales de las piezas (los 5 triángulos de tres tamaños, el cuadrado interno y el romboide) por sus lados y vértices.</li>
+                        <li><strong>Nivel 2 (Deducción Informal):</strong> Comprensión de cómo los giros de las piezas modifican su orientación sin alterar sus propiedades métricas subyacentes.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SIMULADOR DINÁMICO TANGRAM TOTALMENTE OPERATIVO -->
+        <section class="game-card">
+            <h3>🧩 3. Recurso Didáctico: Simulador del Desafío Tangram</h3>
+            <div class="instructions">
+                <strong>¿Cómo operar el Tangram?</strong><br>
+                1. 🖱️ <strong>Traslación:</strong> Arrastra y suelta las piezas con el ratón o con el dedo en tu pantalla.<br>
+                2. 🔄 <strong>Rotación:</strong> Haz <strong>doble clic o un doble toque rápido</strong> sobre la pieza para rotarla (cada acción la gira en 45°).<br>
+                3. 🎯 <strong>Objetivo:</strong> Mueve y orienta las piezas para rellenar perfectamente el área delimitada del cuadrado central. Al estar en la posición y rotación correctas, la pieza se bloqueará automáticamente en su lugar.
+            </div>
+
+            <div class="sandbox" id="sandbox">
+                <!-- Indicador visual del área de encaje -->
+                <div class="target-area" id="mainTarget"></div>
+                <div class="target-hint" id="hintText">ZONA DE DETECCIÓN<br>(Forma un Cuadrado Grande)</div>
+
+                <!-- Las 7 piezas con posiciones de inicio aleatorias y datos de destino precisos -->
+                <!-- x_target, y_target representan el offset relativo al centro del sandbox -->
+                <div class="piece" id="tg1" data-angle="0" data-target-angle="0" data-tx="0" data-ty="-50" style="top: 40px; left: 40px;"></div>
+                <div class="piece" id="tg2" data-angle="0" data-target-angle="180" data-tx="0" data-ty="50" style="top: 40px; right: 40px;"></div>
+                <div class="piece" id="tm" data-angle="0" data-target-angle="135" data-tx="50" data-ty="50" style="top: 360px; left: 40px;"></div>
+                <div class="piece" id="tp1" data-angle="0" data-target-angle="0" data-tx="-50" data-ty="0" style="top: 180px; left: 50px;"></div>
+                <div class="piece" id="tp2" data-angle="0" data-target-angle="90" data-tx="0" data-ty="50" style="top: 180px; right: 60px;"></div>
+                <div class="piece" id="square" data-angle="0" data-target-angle="0" data-tx="0" data-ty="0" style="top: 360px; right: 50px;"></div>
+                <div class="piece" id="romboide" data-angle="0" data-target-angle="0" data-tx="50" data-ty="-50" style="top: 260px; left: 42%;"></div>
+            </div>
+
+            <div id="win-message">🎉 ¡Excelente! Situación Didáctica Completada. Has aplicado traslaciones y rotaciones con precisión geométrica.</div>
+        </section>
+
+        <!-- SECCIÓN 4: SECUENCIA DE LA SITUACIÓN DIDÁCTICA -->
+        <section class="info-section">
+            <h3>📈 4. Secuencia Metodológica de la Situación</h3>
+            <div class="badge-box">
+                <strong>A. Fase de Inicio (Motivación y Saberes Previos):</strong> El docente presenta el espacio en la pizarra digital y lanza la pregunta clave: <em>¿Qué ocurre con las propiedades de un triángulo si lo trasladamos o lo giramos en el plano?</em> Se recuperan conceptos básicos de polígonos.
+            </div>
+            <div class="badge-box">
+                <strong>B. Fase de Desarrollo (Gestión del Aprendizaje):</strong> Los estudiantes manipulan de forma autónoma el Tangram en sus dispositivos móviles o computadoras. Deben descubrir de manera inductiva la correspondencia posicional y angular para lograr el encaje de las piezas dentro de la zona de simulación.
+            </div>
+            <div class="badge-box">
+                <strong>C. Fase de Cierre (Metacognición):</strong> El software valida la construcción correcta del cuadrado. Los estudiantes exponen verbalmente qué transformaciones aplicaron (ej. <em>"Apliqué una rotación de 90° y trasladé el eje"</em>), logrando la formalización del contenido institucional requerido.
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>© 2026 Universidad Tecnológica del Perú - Facultad de Educación • Curso: Didáctica de la Matemática</p>
+    </footer>
+
+    <!-- MOTOR LÓGICO DE INTERACTIVIDAD Y ENCAJE MAGNÉTICO REAL -->
+    <script>
+        const pieces = document.querySelectorAll('.piece');
+        const sandbox = document.getElementById('sandbox');
+        const targetArea = document.getElementById('mainTarget');
+        const winMessage = document.getElementById('win-message');
+        const hintText = document.getElementById('hintText');
+
+        let activePiece = null;
+        let offsetX = 0;
+        let offsetY = 0;
+        let lockedCount = 0;
+
+        pieces.forEach(piece => {
+            // Soporte universal para interacciones
+            piece.addEventListener('mousedown', (e) => startDrag(e, piece));
+            piece.addEventListener('touchstart', (e) => startDrag(e.touches[0], piece), {passive: false});
+            piece.addEventListener('dblclick', () => rotatePiece(piece));
+        });
+
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('touchmove', (e) => drag(e.touches[0]), {passive: false});
+        document.addEventListener('mouseup', endDrag);
+        document.addEventListener('touchend', endDrag);
+
+        function startDrag(e, piece) {
+            if (piece.classList.contains('locked')) return;
+            activePiece = piece;
+            
+            const rect = piece.getBoundingClientRect();
+            offsetX = e.clientX - rect.left;
+            offsetY = e.clientY - rect.top;
+            
+            sandbox.appendChild(piece); // Lleva al frente visualmente
+        }
+
+        function drag(e) {
+            if (!activePiece) return;
+            e.preventDefault ? e.preventDefault() : null;
+
+            const sandboxRect = sandbox.getBoundingClientRect();
+            let left = e.clientX - sandboxRect.left - offsetX;
+            let top = e.clientY - sandboxRect.top - offsetY;
+
+            // Restricción perimetral
+            left = Math.max(0, Math.min(left, sandboxRect.width - activePiece.offsetWidth));
+            top = Math.max(0, Math.min(top, sandboxRect.height - activePiece.offsetHeight));
+
+            activePiece.style.left = left + 'px';
+            activePiece.style.top = top + 'px';
+            
+            checkSnapping(activePiece);
+        }
+
+        function endDrag() {
+            if (activePiece) {
+                checkSnapping(activePiece, true); // Forzar verificación final al soltar
+            }
+            activePiece = null;
+        }
+
+        function rotatePiece(piece) {
+            if (piece.classList.contains('locked')) return;
+            let currentRotation = parseInt(piece.getAttribute('data-angle')) || 0;
+            currentRotation = (currentRotation + 45) % 360;
+            piece.setAttribute('data-angle', currentRotation);
+            piece.style.transform = `rotate(${currentRotation}deg)`;
+            
+            checkSnapping(piece);
+        }
+
+        // FUNCIÓN MATEMÁTICA DE ENCAJE Y VALIDACIÓN DIDÁCTICA REAL
+        function checkSnapping(piece, isRelease = false) {
+            const sandboxRect = sandbox.getBoundingClientRect();
+            const targetRect = targetArea.getBoundingClientRect();
+
+            // Calcular el centro geométrico de la zona de destino
+            const targetCenterX = targetRect.left - sandboxRect.left + targetRect.width / 2;
+            const targetCenterY = targetRect.top - sandboxRect.top + targetRect.height / 2;
+
+            // Coordenadas esperadas de la pieza basadas en sus datos matemáticos específicos
+            const expectedTx = parseFloat(piece.getAttribute('data-tx'));
+            const expectedTy = parseFloat(piece.getAttribute('data-ty'));
+            
+            const destLeft = targetCenterX + expectedTx - piece.offsetWidth / 2;
+            const destTop = targetCenterY + expectedTy - piece.offsetHeight / 2;
+
+            // Coordenadas actuales de la pieza
+            const currentLeft = parseFloat(piece.style.left);
+            const currentTop = parseFloat(piece.style.top);
+
+            // Validar rotación
+            const currentAngle = parseInt(piece.getAttribute('data-angle')) || 0;
+            const targetAngle = parseInt(piece.getAttribute('data-target-angle'));
+
+            // Tolerancia de píxeles para el encaje (simula precisión de niños en tablets)
+            const tolerance = 25; 
+
+            if (Math.abs(currentLeft - destLeft) < tolerance && 
+                Math.abs(currentTop - destTop) < tolerance && 
+                currentAngle === targetAngle) {
+                
+                // Efecto de imán: encajar perfectamente en la posición real esperada
+                piece.style.left = destLeft + 'px';
+                piece.style.top = destTop + 'px';
+                piece.classList.add('locked');
+                lockedCount++;
+                
+                // Evaluar si se completó el puzzle geométrico completo
+                if (lockedCount === pieces.length) {
+                    winMessage.style.display = 'block';
+                    hintText.innerHTML = "¡COMPLETADO CON ÉXITO!";
+                    hintText.style.color = "#2ecc71";
+                }
+                activePiece = null;
+            }
+        }
+    </script>
+</body>
+</html>
