@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exposición: Sesión de Aprendizaje Tangram DUA</title>
+    <!-- Estilos Base de Reveal.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <!-- Tema Profesional Premium (Black) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/black.min.css">
+    <style>
+        :root {
+            --accent-color: #00adb5;
+            --warning-color: #ffde59;
+            --danger-color: #ff5722;
+            --bg-card: #1e1e1e;
+        }
+        
+        /* Ajustes globales adaptativos */
+        .reveal .slides {
+            text-align: left !important;
+        }
+        .reveal h1, .reveal h2, .reveal h3 {
+            color: var(--accent-color);
+            text-transform: none;
+            font-weight: 700;
+            margin: 0 0 1% 0 !important;
+        }
+        .reveal h1 { font-size: 1.6em; text-shadow: 2px 2px 4px rgba(0,0,0,0.6); text-align: center; }
+        .reveal h2 { font-size: 1.2em; border-bottom: 2px dashed #444; padding-bottom: 5px; margin-bottom: 2% !important; }
+        .reveal h3 { font-size: 0.9em; color: var(--warning-color); }
+        
+        .text-warning { color: var(--warning-color); }
+        .text-accent { color: var(--accent-color); }
+        .text-important { color: #fff; font-weight: bold; }
+        
+        /* Contenedores Flexibles y Responsivos */
+        .grid-2 {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+        }
+        .grid-2 > div, .grid-2 > article {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .grid-3 {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+        }
+        .grid-3 > div {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .slide-content {
+            font-size: 0.65em !important; 
+            line-height: 1.3em;
+        }
+        .cover-container {
+            border: 3px dashed var(--accent-color);
+            padding: 2%;
+            border-radius: 12px;
+            background-color: #111;
+            box-sizing: border-box;
+        }
+        .badge {
+            background-color: #222831;
+            padding: 4px 8px;
+            border-radius: 5px;
+            border: 1px solid #444;
+            font-size: 0.8em;
+            display: inline-block;
+        }
+        .info-panel {
+            background-color: var(--bg-card);
+            padding: 2% 3%;
+            border-radius: 6px;
+            border-left: 4px solid var(--accent-color);
+            margin-bottom: 2%;
+            box-sizing: border-box;
+        }
+        
+        /* Botones Interactivos Flexibles */
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 3%;
+            flex-wrap: wrap;
+        }
+        .btn-nav {
+            background-color: #222831;
+            color: #fff !important;
+            border: 1px solid var(--accent-color);
+            padding: 6px 12px;
+            font-size: 0.85em;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none !important;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .btn-nav:hover {
+            background-color: var(--accent-color);
+            color: #111 !important;
+            box-shadow: 0 0 8px var(--accent-color);
+        }
+        
+        ul { margin-top: 2px !important; padding-left: 18px !important; }
+        li { margin-bottom: 3px !important; }
+        table { width: 100%; font-size: 0.85em; color: #fff; border-collapse: collapse; }
+        th { color: var(--warning-color); border-bottom: 2px solid var(--accent-color); padding: 6px; text-align: left; }
+        td { padding: 6px; border-bottom: 1px solid #333; vertical-align: top; }
+
+        @media (max-width: 768px) {
+            .grid-2, .grid-3 {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .reveal h1 { font-size: 1.2em; }
+            .reveal h2 { font-size: 1em; }
+            .cover-container { padding: 1%; }
+            table { font-size: 0.7em; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- DIAPOSITIVA 1: PORTADA ACADÉMICA -->
+            <section data-background-color="#121212" class="slide-content">
+                <div class="cover-container">
+                    <p class="text-accent" style="font-size: 0.8em; font-weight: bold; margin: 0; letter-spacing: 2px; text-align: center;">CURSO</p>
+                    <h1>Didáctica de la Matemática</h1>
+                    
+                    <div class="grid-2" style="font-size: 0.85em; margin-top: 10px;">
+                        <div>
+                            <p style="margin: 0;"><strong class="text-warning">Docente:</strong></p>
+                            <p style="margin: 2px 0 8px 10px;">Ore Porras, Guadalupe Cristina</p>
+                            
+                            <p style="margin: 0;"><strong class="text-warning">Estudiantes:</strong></p>
+                            <ul style="list-style-type: square; margin-left: 10px; padding: 0;">
+                                <li>Benavente Huerta, Helen L.</li>
+                                <li>Callupe Llallico, Aaron S.</li>
+                                <li>Inga Moreno, Estefany Y.</li>
+                                <li>Sánchez Verastegui, Ruth E.</li>
+                            </ul>
+                        </div>
+                        <div style="border-left: 2px solid #333; padding-left: 15px;">
+                            <p style="margin: 0;"><strong class="text-accent">Sesión de Aprendizaje:</strong></p>
+                            <p style="font-size: 1.05em; font-weight: bold; margin: 4px 0 8px 0; color: #fff; line-height: 1.2em;">
+                                Descubrimos y componemos formas geométricas usando el Geoplano físico y el Tangram digital
+                            </p>
+                            <div style="display: flex; gap: 5px; flex-wrap: wrap; margin-top: 5px;">
+                                <div class="badge"><strong>Sección:</strong> 43871</div>
+                                <div class="badge"><strong>GRUPO:</strong> 12</div>
+                                <div class="badge" style="flex-grow: 1; text-align: center;"><strong>Año:</strong> 2026</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Botones de Navegación Externa -->
+                    <div class="btn-container">
+                        <a href="https://callupellallicoaaron.github.io/Didactica-de-la-Matematica/" target="_blank" class="btn-nav">🌐 Ver portafolio digital</a>
+                        <a href="Sesion de aprendizaje - Grupo12.pdf" target="_blank" class="btn-nav">📄 Sesión de Aprendizaje</a>
+                        <a href="Actividad-11-1.html" target="_blank" class="btn-nav">🧩 Tangram digital</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DIAPOSITIVA 2: DATOS INFORMATIVOS Y PROPÓSITO -->
+            <section class="slide-content">
+                <h2>1. Contexto y Propósito de la Sesión</h2>
+                <div class="grid-2">
+                    <div class="info-panel">
+                        <h3 style="margin: 0 0 4px 0;">Datos Informativos</h3>
+                        <p style="margin: 0; font-size: 0.95em; line-height: 1.4em;">
+                            • <strong>I.E.:</strong> Coronel Francisco Bolognesi<br>
+                            • <strong>Área:</strong> Matemática | <strong>Grado:</strong> 1° Grado<br>
+                            • <strong>Duración:</strong> 90 minutos<br>
+                            • <strong>Fecha:</strong> 26 / 04 / 2026
+                        </p>
+                    </div>
+                    <div class="info-panel" style="border-left-color: var(--warning-color);">
+                        <h3 style="margin: 0 0 4px 0; color: var(--warning-color);">Meta de Aprendizaje</h3>
+                        <p style="margin: 0; text-align: justify; font-size: 0.95em;">
+                            Identificar y construir formas geométricas planas (cuadrados, triángulos y rectángulos) en un <strong>geoplano físico con ligas</strong>, para luego combinarlas al armar figuras complejas en una <strong>web interactiva de Tangram</strong>.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DIAPOSITIVA 3: ORGANIZACIÓN CURRICULAR -->
+            <section class="slide-content">
+                <h2>2. Competencias y Evaluación</h2>
+                <div style="overflow-x: auto; width: 100%;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 35%;">Competencia / Capacidades</th>
+                                <th style="width: 40%;">Criterios de Evaluación</th>
+                                <th style="width: 25%;">Evidencia / Instrumento</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <strong>Resuelve problemas de forma, movimiento y localización</strong>
+                                    <ul style="font-size: 0.9em; padding-left: 10px;">
+                                        <li>Modela objetos con formas geométricas.</li>
+                                        <li>Comunica su comprensión.</li>
+                                    </ul>
+                                </td>
+                                <td>
+                                    <ul style="font-size: 0.9em; padding-left: 10px; margin: 0;">
+                                        <li>Representa formas usando ligas en geoplano y piezas en la web.</li>
+                                        <li>Describe esquinas/vértices y lados rectos con lenguaje cotidiano.</li>
+                                    </ul>
+                                </td>
+                                <td>
+                                    <span class="text-important">Evidencia:</span> Formas en geoplano y siluetas en entorno digital.<br>
+                                    <span class="text-warning">Instrumento:</span> Lista de cotejo.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong class="text-accent">TIC Transversal:</strong> Se desenvuelve en entornos virtuales.
+                                </td>
+                                <td colspan="2">
+                                    Explora dispositivos, realiza arrastres y rotaciones simples para construir figuras en la web del Tangram.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- DIAPOSITIVA 4: ENFOQUE Y SECUENCIA DE INICIO -->
+            <section class="slide-content">
+                <h2>3. Enfoque Transversal e Inicio (15 min)</h2>
+                <div class="grid-2">
+                    <div class="info-panel" style="border-left-color: #4caf50;">
+                        <h3 style="margin: 0 0 4px 0; color: #4caf50;">Bien Común</h3>
+                        <p style="margin: 0; font-size: 0.95em;">
+                            Los docentes promueven oportunidades para asumir responsabilidades mutuas, velando por el bienestar propio y colectivo del aula.
+                        </p>
+                    </div>
+                    <article>
+                        <h3 style="margin: 0 0 4px 0; color: var(--accent-color);">Fases del Inicio</h3>
+                        <ul style="padding-left: 12px; font-size: 0.95em;">
+                            <li><span class="text-accent"><strong>Motivación:</strong></span> "Caja misteriosa" con objetos de entorno (portarretrato, banderín, sobre) para exploración libre.</li>
+                            <li><span class="text-accent"><strong>Reto Cognitivo:</strong></span> ¿Cómo construir formas en el aire con ligas y clavitos? ¿Cómo unirlas en la PC para crear paisajes?</li>
+                            <li><span class="text-accent"><strong>Acuerdos:</strong></span> Declaración del propósito y pautas para el cuidado del material concreto y las tablets.</li>
+                        </ul>
+                    </article>
+                </div>
+            </section>
+
+            <!-- DIAPOSITIVA 5: DESARROLLO - GEOPLANO FÍSICO -->
+            <section class="slide-content">
+                <h2>4. Desarrollo: Geoplano Físico (30 min)</h2>
+                <p style="margin: 0 0 8px 0;"><strong>Fase Concreta:</strong> Descubrimiento individual de propiedades bidimensionales.</p>
+                <div class="grid-2">
+                    <div class="info-panel">
+                        <h3 style="margin: 0 0 4px 0;">Estrategia General</h3>
+                        <ul style="font-size: 0.9em;">
+                            <li>Trabajo en equipos inclusivos. Distribución de tableros con pines alineados y ligas de colores.</li>
+                            <li><strong>Reto autónomo:</strong> Estirar ligas para modelar un cuadrado, triángulo y rectángulo.</li>
+                            <li>Los alumnos verbalizan contando vértices ("esquinas") y lados rectos.</li>
+                        </ul>
+                    </div>
+                    <div class="info-panel" style="border-left-color: var(--danger-color);">
+                        <h3 style="margin: 0 0 4px 0; color: var(--danger-color);">Inclusión y Adaptaciones</h3>
+                        <ul style="font-size: 0.9em;">
+                            <li><span class="text-important">Visual:</span> Tableros de alto contraste (negro/amarillo fosforescente) o canales en relieve. Ligas gruesas trenzadas. Guiado de manos.</li>
+                            <li><span class="text-important">Motriz Fina:</span> Sustitución de ligas por un <strong>geoplano magnético</strong> con barras imantadas de fácil adherencia.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DIAPOSITIVA 6: DESARROLLO - TANGRAM DIGITAL -->
+            <section class="slide-content">
+                <h2>5. Desarrollo: Tangram Digital (35 min)</h2>
+                <p style="margin: 0 0 8px 0;"><strong>Fase de Abstracción:</strong> Composición de formas geométricas en el entorno virtual.</p>
+                <div class="grid-2">
+                    <div class="info-panel">
+                        <h3 style="margin: 0 0 4px 0;">Secuencia Tecnológica</h3>
+                        <ul style="font-size: 0.9em;">
+                            <li>Uso de tablets/laptops para ingresar al sitio web interactivo.</li>
+                            <li><strong>Reto Complejo:</strong> Manipular, rotar y combinar las 7 piezas para estructurar la silueta guía de <strong>El Cohete</strong>.</li>
+                            <li>Andamiaje docente enfocado en lenguaje matemático.</li>
+                        </ul>
+                    </div>
+                    <div class="info-panel" style="border-left-color: var(--accent-color);">
+                        <h3 style="margin: 0 0 4px 0; color: var(--accent-color);">Accesibilidad DUA Web</h3>
+                        <ul style="font-size: 0.9em;">
+                            <li><span class="text-important">Canal Auditivo:</span> Sonidos festivos al encajar piezas y lector integrado (<em>"Has colocado el triángulo grande"</em>).</li>
+                            <li><span class="text-important">Control Alternativo:</span> Interfaz optimizada para selección por clics sucesivos y botones amplios de rotación a 90°, evitando el arrastre de precisión.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DIAPOSITIVA 7: CIERRE Y EVALUACIÓN -->
+            <section class="slide-content">
+                <h2>6. Cierre, Metacognición y Reflexión</h2>
+                <div class="grid-2">
+                    <div class="info-panel" style="border-left-color: var(--warning-color);">
+                        <h3 style="margin: 0 0 4px 0; color: var(--warning-color);">Diálogo Metacognitivo (10 min)</h3>
+                        <p style="margin: 0 0 4px 0; font-size: 0.95em;">Evaluación grupal en semicírculo:</p>
+                        <ul style="padding-left: 12px; font-size: 0.9em;">
+                            <li>¿Qué formas logramos estirar en el geoplano físico?</li>
+                            <li>¿Cómo ayudó conocer los lados de los triángulos en la web?</li>
+                            <li>¿Qué retos tuvimos y cómo nos apoyamos?</li>
+                        </ul>
+                    </div>
+                    <div class="info-panel" style="border-left-color: var(--accent-color);">
+                        <h3 style="margin: 0 0 4px 0; color: var(--accent-color);">Reflexiones Pedagógicas</h3>
+                        <ul style="padding-left: 12px; font-size: 0.9em;">
+                            <li>¿El geoplano físico cimentó nociones de lados y vértices antes de la pantalla?</li>
+                            <li>¿Qué ayudas de la interfaz requirieron más soporte?</li>
+                            <li>¿Se consolidó la empatía e inclusión mutua?</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DIAPOSITIVA 8: RECURSOS Y MATERIALES -->
+            <section class="slide-content">
+                <h2>7. Recursos y Materiales Articulados</h2>
+                <div class="grid-3">
+                    <div style="background-color: #222; padding: 10px; border-radius: 6px; border-top: 4px solid var(--accent-color);">
+                        <h3 style="font-size: 0.95em; color: #fff; margin: 0 0 4px 0;">Base Curricular</h3>
+                        <p style="font-size: 0.95em; margin: 0; text-align: justify;">
+                            Currículo Nacional (CNEB) - Minedu, Perú. Enfoque de resolución de problemas espaciales y de localización.
+                        </p>
+                    </div>
+                    <div style="background-color: #222; padding: 10px; border-radius: 6px; border-top: 4px solid var(--warning-color);">
+                        <h3 style="font-size: 0.95em; color: #fff; margin: 0 0 4px 0;">Material Concreto</h3>
+                        <p style="font-size: 0.95em; margin: 0; text-align: justify;">
+                            Geoplanos estándar, de alto contraste visual y táctiles con relieve. Ligas elásticas variadas, texturizadas y barras imantadas.
+                        </p>
+                    </div>
+                    <div style="background-color: #222; padding: 10px; border-radius: 6px; border-top: 4px solid var(--danger-color);">
+                        <h3 style="font-size: 0.95em; color: #fff; margin: 0 0 4px 0;">Soporte Digital</h3>
+                        <p style="font-size: 0.95em; margin: 0; text-align: justify;">
+                            Tablets o Laptops operativas. Plataforma web de Tangram accesible con soporte de voz y comandos motrices adaptados.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DIAPOSITIVA 9: HERRAMIENTA DE EVALUACIÓN (LISTA DE COTEJO) -->
+            <section class="slide-content">
+                <h2>8. Herramienta de Evaluación: Lista de Cotejo</h2>
+                <div style="overflow-x: auto; width: 100%;">
+                    <table style="font-size: 0.8em; min-width: 600px;">
+                        <thead>
+                            <tr>
+                                <th style="width: 25%;">Criterio de Evaluación</th>
+                                <th style="width: 45%;">Indicadores de Logro</th>
+                                <th style="width: 10%; text-align: center;">SÍ</th>
+                                <th style="width: 10%; text-align: center;">NO</th>
+                                <th style="width: 10%;">Observaciones / Ajustes DUA</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>1. Modelado y Representación</strong> <br><small><i>(Fase Concreta y Digital)</i></small></td>
+                                <td>Construye cuadrados, triángulos y rectángulos usando ligas en el geoplano físico o mediante el ensamble de piezas en la plataforma web.</td>
+                                <td style="text-align: center;"></td>
+                                <td style="text-align: center;"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><strong>2. Comunicación de Nociones Geométricas</strong></td>
+                                <td>Describe con lenguaje cotidiano las características de las formas (menciona y cuenta "esquinas/vértices" o "lados rectos") al manipular los materiales.</td>
+                                <td style="text-align: center;"></td>
+                                <td style="text-align: center;"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><strong>3. Desenvolvimiento en Entornos Virtuales</strong> <br><small><i>(TIC)</i></small></td>
+                                <td>Explora la interfaz, arrastra o rota de manera autónoma (o mediante los comandos fijos adaptados) las piezas virtuales del Tangram digital.</td>
+                                <td style="text-align: center;"></td>
+                                <td style="text-align: center;"></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Scripts de Reveal.js para el control de la presentación -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            center: true,
+            slideNumber: 'c/t', 
+            transition: 'slide', 
+            transitionSpeed: 'normal',
+            width: 960,  
+            height: 600, 
+            margin: 0.05,
+            minScale: 0.2, 
+            maxScale: 1.2
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mesa Tangram DUA - El Cohete Perfecto</title>
+    <style>
+        :root {
+            --bg-color: #1a1a1a;
+            --card-bg: #222831;
+            --text-color: #ffffff;
+            --accent-color: #00adb5;
+            --accent-light: #00fff2;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+            border-bottom: 3px dashed #444;
+            padding-bottom: 5px;
+            width: 100%;
+            max-width: 1320px;
+        }
+
+        .header h1 {
+            color: var(--accent-color);
+            margin: 5px 0;
+            font-size: 24px;
+            text-shadow: 2px 2px #000;
+        }
+
+        .docentes {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .workspace-layout {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            max-width: 1350px;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* PANEL DE CONTROL DUA */
+        .control-panel {
+            background-color: var(--card-bg);
+            border: 3px solid var(--accent-color);
+            border-radius: 12px;
+            padding: 15px;
+            width: 220px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .control-panel h2 {
+            font-size: 16px;
+            color: #ffde59;
+            margin: 0;
+            text-align: center;
+            border-bottom: 1px solid #444;
+            padding-bottom: 5px;
+        }
+
+        .info-box {
+            background-color: #111;
+            border: 2px solid #444;
+            padding: 10px;
+            border-radius: 8px;
+            min-height: 40px;
+            font-size: 14px;
+            color: #fffff0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .btn-accessible {
+            background-color: #ff5722;
+            color: white;
+            border: 3px solid #b73205;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px #b73205;
+            transition: all 0.1s ease;
+        }
+
+        .btn-accessible:active {
+            box-shadow: 0 0px #b73205;
+            transform: translateY(4px);
+        }
+
+        .btn-toggle-voice {
+            background-color: #4caf50;
+            border-color: #2e6930;
+            box-shadow: 0 4px #2e6930;
+        }
+        .btn-toggle-voice.desactivado {
+            background-color: #f44336;
+            border-color: #b71c1c;
+            box-shadow: 0 4px #b71c1c;
+        }
+
+        /* MESA DE JUEGO (IZQUIERDA) */
+        .game-board-left {
+            background-color: #111;
+            border: 4px solid #444;
+            border-radius: 15px;
+            width: 540px;
+            height: 540px;
+            position: relative;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+            overflow: hidden;
+        }
+
+        /* GUÍA DE REFERENCIA (DERECHA) */
+        .guide-board-right {
+            background-color: #1c1c1c;
+            border: 4px dashed #ffde59;
+            border-radius: 15px;
+            width: 540px;
+            height: 540px;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            overflow: hidden;
+        }
+
+        .guide-title {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 13px;
+            color: #ffde59;
+            font-weight: bold;
+            background-color: #111;
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1px solid #444;
+            z-index: 20;
+            text-transform: uppercase;
+        }
+
+        .guide-svg {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        /* CONFIGURACIÓN PIEZAS JUGABLES */
+        .tangram-piece {
+            position: absolute;
+            cursor: move;
+            z-index: 10;
+        }
+
+        .piece-rotator {
+            transform-origin: center center;
+            transition: transform 0.1s linear;
+            display: inline-flex;
+        }
+
+        .piece-selected .piece-rotator svg {
+            filter: drop-shadow(0px 0px 8px var(--accent-light));
+            stroke: #ffffff !important;
+            stroke-width: 3px !important;
+        }
+
+        /* Ubicaciones iniciales exactas de las piezas móviles */
+        #t-grande-1 { top: 20px; left: 20px; }
+        #t-grande-2 { top: 20px; left: 360px; }
+        #t-mediano { top: 430px; left: 360px; }
+        #cuadrado { top: 230px; left: 20px; }
+        #paralelogramo { top: 430px; left: 20px; }
+        #t-pequeno-1 { top: 230px; left: 430px; }
+        #t-pequeno-2 { top: 330px; left: 430px; }
+
+        .footer-note {
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+            margin-top: 15px;
+            max-width: 800px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="docentes">Docentes: Benavente, H. | Callupe, A. | Inga, E. | Sánchez, R.</div>
+        <h1>Mesa de Simulación Tangram Multi-Reto</h1>
+        <p style="margin:5px 0 0 0; color:#ffde59; font-size:14px;">Precisión Educativa DUA: Escala 1:1 absoluta. Piezas sin superposiciones ni deformaciones espaciales.</p>
+    </div>
+
+    <div class="workspace-layout">
+        
+        <div class="control-panel">
+            <h2>Panel DUA</h2>
+            
+            <div id="info-pantalla" class="info-box">Toca una figura</div>
+            
+            <button class="btn-accessible" onclick="rotarPieza()">🔄 GIRAR SELECCIÓN<br>(45°)</button>
+            <button id="btn-voz" class="btn-accessible btn-toggle-voice" onclick="toggleVoz()">🔊 VOZ: ACTIVADA</button>
+        </div>
+
+        <div class="game-board-left" id="tablero">
+            
+            <div id="t-grande-1" class="tangram-piece" onclick="seleccionarPieza(this, 'Triángulo grande rojo.', 'Triángulo Rojo')">
+                <div class="piece-rotator"><svg width="160" height="80" viewBox="0 0 160 80"><polygon points="0 0, 160 0, 80 80" fill="#ff3333" stroke="#111" stroke-width="2"/></svg></div>
+            </div>
+            
+            <div id="t-grande-2" class="tangram-piece" onclick="seleccionarPieza(this, 'Triángulo grande naranja.', 'Triángulo Naranja')">
+                <div class="piece-rotator"><svg width="160" height="80" viewBox="0 0 160 80"><polygon points="0 0, 160 0, 80 80" fill="#ff9800" stroke="#111" stroke-width="2"/></svg></div>
+            </div>
+            
+            <div id="t-mediano" class="tangram-piece" onclick="seleccionarPieza(this, 'Triángulo mediano rosado.', 'Triángulo Rosado')">
+                <div class="piece-rotator"><svg width="160" height="80" viewBox="0 0 160 80"><polygon points="0 0, 160 0, 80 80" fill="#e91e63" stroke="#111" stroke-width="2"/></svg></div>
+            </div>
+            
+            <div id="cuadrado" class="tangram-piece" onclick="seleccionarPieza(this, 'Cuadrado amarillo.', 'Cuadrado Amarillo')">
+                <div class="piece-rotator"><svg width="80" height="80" viewBox="0 0 80 80"><rect width="80" height="80" fill="#ffde59" stroke="#111" stroke-width="2"/></svg></div>
+            </div>
+            
+            <div id="paralelogramo" class="tangram-piece" onclick="seleccionarPieza(this, 'Paralelogramo morado.', 'Paralelogramo Morado')">
+                <div class="piece-rotator"><svg width="160" height="80" viewBox="0 0 160 80"><polygon points="40 0, 120 0, 80 80, 0 80" fill="#9c27b0" stroke="#111" stroke-width="2"/></svg></div>
+            </div>
+            
+            <div id="t-pequeno-1" class="tangram-piece" onclick="seleccionarPieza(this, 'Triángulo pequeño verde.', 'Triángulo Verde')">
+                <div class="piece-rotator"><svg width="80" height="40" viewBox="0 0 80 40"><polygon points="0 0, 80 0, 40 40" fill="#4caf50" stroke="#111" stroke-width="2"/></svg></div>
+            </div>
+            
+            <div id="t-pequeno-2" class="tangram-piece" onclick="seleccionarPieza(this, 'Triángulo pequeño celeste.', 'Triángulo Celeste')">
+                <div class="piece-rotator"><svg width="80" height="40" viewBox="0 0 80 40"><polygon points="0 0, 80 0, 40 40" fill="#03a9f4" stroke="#111" stroke-width="2"/></svg></div>
+            </div>
+
+        </div>
+
+        <div class="guide-board-right">
+            <div class="guide-title">Modelo: El Cohete</div>
+            <svg class="guide-svg" id="canvas-guia" viewBox="0 0 540 540" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <polygon id="mold-tg1" points="0 0, 160 0, 80 80" fill="#ff3333" />
+                    <polygon id="mold-tg2" points="0 0, 160 0, 80 80" fill="#ff9800" />
+                    <polygon id="mold-tm" points="0 0, 160 0, 80 80" fill="#e91e63" />
+                    <rect id="mold-cr" width="80" height="80" fill="#ffde59" />
+                    <polygon id="mold-pa" points="40 0, 120 0, 80 80, 0 80" fill="#9c27b0" />
+                    <polygon id="mold-tp1" points="0 0, 80 0, 40 40" fill="#4caf50" />
+                    <polygon id="mold-tp2" points="0 0, 80 0, 40 40" fill="#03a9f4" />
+                </defs>
+                <g id="contenedor-figura" stroke="#111" stroke-width="2" stroke-linejoin="round">
+                    <use href="#mold-tm" transform="translate(190,80) rotate(180 80 40)"/>
+                    <use href="#mold-tg1" transform="translate(190,160)"/>
+                    <use href="#mold-tg2" transform="translate(190,240) rotate(180 80 40)"/>
+                    <use href="#mold-cr" x="230" y="320"/>
+                    <use href="#mold-tp1" transform="translate(150,320) rotate(90 40 20)"/>
+                    <use href="#mold-tp2" transform="translate(310,320) rotate(270 40 20)"/>
+                    <use href="#mold-pa" transform="translate(190,400)"/>
+                </g>
+            </svg>
+        </div>
+
+    </div>
+
+    <div class="footer-note">
+        * <b>Isomorfismo y Equivalencia 1:1:</b> El Cohete está renderizado llamando a los mismos moldes mediante `<use>`. Si superpones las piezas correspondientes, calzarán al milímetro sin sobrar espacio ni encimarse.
+    </div>
+
+    <script>
+        let piezaActiva = null;
+        let vozActiva = true;
+        let indiceZ = 100;
+
+        function hablar(texto) {
+            if (vozActiva && 'speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(texto);
+                utterance.lang = 'es-PE';
+                utterance.rate = 1.0;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function toggleVoz() {
+            vozActiva = !vozActiva;
+            const btn = document.getElementById('btn-voz');
+            if (vozActiva) {
+                btn.innerText = "🔊 VOZ: ACTIVADA";
+                btn.classList.remove('desactivado');
+                hablar("Lector encendido");
+            } else {
+                window.speechSynthesis.cancel();
+                btn.innerText = "🔇 VOZ: APAGADA";
+                btn.classList.add('desactivado');
+            }
+        }
+
+        function seleccionarPieza(elemento, descripcion, nombreCorto) {
+            document.querySelectorAll('.tangram-piece').forEach(p => p.classList.remove('piece-selected'));
+            
+            piezaActiva = elemento;
+            piezaActiva.classList.add('piece-selected');
+            
+            indiceZ++;
+            piezaActiva.style.zIndex = indiceZ;
+            
+            document.getElementById('info-pantalla').innerText = nombreCorto;
+            hablar(nombreCorto);
+        }
+
+        function rotarPieza() {
+            if (!piezaActiva) {
+                hablar("Selecciona una figura primero.");
+                return;
+            }
+            let rotacion = parseInt(piezaActiva.getAttribute('data-rot')) || 0;
+            rotacion = (rotacion + 45) % 360;
+            piezaActiva.setAttribute('data-rot', rotacion);
+            
+            const rotador = piezaActiva.querySelector('.piece-rotator');
+            rotador.style.transform = `rotate(${rotacion}deg)`;
+            
+            hablar(`Girado ${rotacion} grados.`);
+        }
+
+        // MOTOR DE MOVIMIENTO EN MESA IZQUIERDA
+        document.querySelectorAll('.tangram-piece').forEach(pieza => {
+            let arrastrando = false;
+            let offsetX, offsetY;
+
+            pieza.addEventListener('mousedown', iniciarArrastre);
+            pieza.addEventListener('touchstart', iniciarArrastre, {passive: false});
+
+            function iniciarArrastre(e) {
+                e.preventDefault();
+                arrastrando = true;
+                pieza.click();
+
+                let clienteX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+                let clienteY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+
+                let rect = pieza.getBoundingClientRect();
+                let tableroRect = document.getElementById('tablero').getBoundingClientRect();
+
+                offsetX = clienteX - rect.left;
+                offsetY = clienteY - rect.top;
+
+                let eventoMovimiento = e.type === 'touchstart' ? 'touchmove' : 'mousemove';
+                let eventoFin = e.type === 'touchstart' ? 'touchend' : 'mouseup';
+
+                window.addEventListener(eventoMovimiento, moverPieza);
+                window.addEventListener(eventoFin, detenerArrastre);
+
+                function moverPieza(ev) {
+                    if (!arrastrando) return;
+                    let movX = ev.type === 'touchmove' ? ev.touches[0].clientX : ev.clientX;
+                    let movY = ev.type === 'touchmove' ? ev.touches[0].clientY : ev.clientY;
+                    
+                    let x = movX - tableroRect.left - offsetX;
+                    let y = movY - tableroRect.top - offsetY;
+
+                    x = Math.max(-10, Math.min(x, tableroRect.width - pieza.offsetWidth + 10));
+                    y = Math.max(-10, Math.min(y, tableroRect.height - pieza.offsetHeight + 10));
+
+                    pieza.style.left = x + 'px';
+                    pieza.style.top = y + 'px';
+                }
+
+                function detenerArrastre() {
+                    arrastrando = false;
+                    window.removeEventListener(eventoMovimiento, moverPieza);
+                    window.removeEventListener(eventoFin, detenerArrastre);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
