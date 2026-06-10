@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pensamiento Algebraico - 4to Primaria</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #ec4899;
+            --success: #10b981;
+            --danger: #ef4444;
+            --background: #f1f5f9;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 2rem 1rem 60px 1rem;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            text-align: center;
+            padding: 3rem 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            max-width: 1000px;
+            margin: 0 auto 2rem auto;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+        }
+
+        .badge {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            display: inline-block;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .integrantes-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            max-width: 500px;
+            margin: 1.5rem auto 0 auto;
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: left;
+        }
+
+        .integrantes-container h3 {
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .integrantes-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            align-items: center;
+        }
+
+        .integrantes-list li {
+            font-size: 0.95rem;
+            color: white;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .section-card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+        h2 {
+            color: var(--primary);
+            font-size: 1.6rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid #eff6ff;
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            color: var(--text);
+            margin: 1.5rem 0 0.5rem 0;
+            font-size: 1.2rem;
+        }
+
+        /* --- SIMULADOR 1: PATRONES --- */
+        .pattern-container {
+            display: flex;
+            gap: 1rem;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 1.5rem 0;
+            background-color: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px dashed #cbd5e1;
+        }
+
+        .pattern-step {
+            text-align: center;
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            min-width: 130px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .grid-blocks {
+            display: flex;
+            flex-direction: column-reverse;
+            gap: 4px;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            height: 130px;
+            justify-content: flex-start;
+        }
+
+        .block {
+            width: 35px;
+            height: 25px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: white;
+        }
+        .block-base { background-color: var(--primary); }
+        .block-top { background-color: var(--secondary); }
+
+        /* --- SIMULADOR 2: BALANZA ANIMADA --- */
+        .balance-stage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 2rem 0;
+            background: #fffdf5;
+            border: 2px solid #fef08a;
+            padding: 3rem 1rem;
+            border-radius: 12px;
+            position: relative;
+        }
+
+        .balance-beam-container {
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .balance-beam {
+            width: 100%;
+            height: 12px;
+            background-color: #475569;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            transform-origin: center center;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 2;
+        }
+
+        .balance-base {
+            width: 0;
+            height: 0;
+            border-left: 30px solid transparent;
+            border-right: 30px solid transparent;
+            border-bottom: 60px solid #1e293b;
+            margin-top: -4px;
+            z-index: 1;
+        }
+
+        .plate-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: absolute;
+            top: 6px;
+            width: 160px;
+            transition: transform 0.8s ease;
+        }
+
+        .left-wrapper { left: 0; transform-origin: top center; }
+        .right-wrapper { right: 0; transform-origin: top center; }
+
+        .string {
+            width: 2px;
+            height: 40px;
+            background-color: #94a3b8;
+        }
+
+        .plate {
+            width: 160px;
+            min-height: 90px;
+            background: #cbd5e1;
+            border-top: 6px solid #94a3b8;
+            border-radius: 0 0 50% 50%;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            padding: 10px;
+            align-content: flex-start;
+            justify-content: center;
+            box-shadow: inset 0 6px 8px rgba(0,0,0,0.1);
+        }
+
+        .item-bag {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            padding: 4px 6px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+            border: 1px solid #b45309;
+        }
+
+        .item-cube {
+            width: 20px;
+            height: 20px;
+            background-color: var(--success);
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            border: 1px solid #047857;
+        }
+
+        /* --- BOTONES DE CONTROL INTERACTIVOS --- */
+        .controls-container {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        button {
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        button:active { transform: scale(0.95); }
+
+        .btn-blue { background-color: var(--primary); }
+        .btn-blue:hover { background-color: var(--primary-dark); }
+        .btn-green { background-color: var(--success); }
+        .btn-orange { background-color: #f59e0b; }
+        .btn-danger { background-color: var(--danger); }
+
+        .live-alert {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        /* --- PIZARRA DE LOGROS MATEMÁTICOS --- */
+        .justification-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .just-card {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-top: 5px solid var(--success);
+            border-left: 1px solid #e2e8f0;
+            border-right: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .math-expr {
+            font-family: 'Courier New', Courier, monospace;
+            background: #1e293b;
+            color: #f8fafc;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            font-size: 1.2rem;
+            text-align: center;
+            letter-spacing: 1px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        footer {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-top: 3rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Pensamiento Algebraico en Primaria</h1>
+        <p>Diseño de Retos Basados en Evidencia y Práctica de Aula</p>
+        <div class="badge" style="background-color: var(--secondary);">Grado Seleccionado: 4.º de Primaria</div>
+        
+        <div class="integrantes-container">
+            <h3>Integrantes del Grupo</h3>
+            <ul class="integrantes-list">
+                <li>• Callupe Llallico Aaron Sixto</li>
+                <li>• Inga Moreno Estefany Yeraldin</li>
+                <li>• Sanchez Verastegui Ruth Ester</li>
+            </ul>
+        </div>
+    </header>
+
+    <main>
+
+        <div class="section-card">
+            <h2>1. Diseño de un Reto de Regularidad</h2>
+            <p><strong>Secuencia de patrones crecientes construida con material concreto:</strong> Se emplean bloques lógicos interconectables para armar físicamente estructuras modulares.</p>
+            
+            <div class="pattern-container">
+                <div class="pattern-step">
+                    <div class="grid-blocks">
+                        <div class="block block-top">T</div>
+                        <div class="block block-base">B</div>
+                    </div>
+                    <strong>Figura 1</strong>
+                    <p style="color:var(--text-light); font-size:0.85rem;">2 bloques</p>
+                </div>
+                <div class="pattern-step">
+                    <div class="grid-blocks">
+                        <div class="block block-top">T</div><div class="block block-top">T</div>
+                        <div class="block block-base">B</div><div class="block block-base">B</div>
+                    </div>
+                    <strong>Figura 2</strong>
+                    <p style="color:var(--text-light); font-size:0.85rem;">4 bloques</p>
+                </div>
+                <div class="pattern-step">
+                    <div class="grid-blocks">
+                        <div class="block block-top">T</div><div class="block block-top">T</div><div class="block block-top">T</div>
+                        <div class="block block-base">B</div><div class="block block-base">B</div><div class="block block-base">B</div>
+                    </div>
+                    <strong>Figura 3</strong>
+                    <p style="color:var(--text-light); font-size:0.85rem;">6 bloques</p>
+                </div>
+                <div class="pattern-step">
+                    <div class="grid-blocks">
+                        <div class="block block-top">T</div><div class="block block-top">T</div><div class="block block-top">T</div><div class="block block-top">T</div>
+                        <div class="block block-base">B</div><div class="block block-base">B</div><div class="block block-base">B</div><div class="block block-base">B</div>
+                    </div>
+                    <strong>Figura 4</strong>
+                    <p style="color:var(--text-light); font-size:0.85rem;">8 bloques</p>
+                </div>
+            </div>
+
+            <h3>Pregunta de Generalización Planteada:</h3>
+            <p style="font-style: italic; color: #334155; background: #f8fafc; padding: 1rem; border-radius: 8px; border-left: 4px solid var(--secondary)">
+                "Sin armar físicamente la figura, ¿cuántos bloques se necesitarán exactamente para construir la <strong>Figura 20</strong>? Explica la regla general que descubriste."
+            </p>
+
+            <div class="controls-container" style="border-left: 4px solid var(--primary);">
+                <strong>🕹️ CONTROL EN VIVO: Presiona un botón para simular la respuesta del alumno</strong>
+                <div class="btn-group">
+                    <button class="btn-blue" onclick="runPatron(10)">Probar Figura 10</button>
+                    <button class="btn-blue" onclick="runPatron(20)">Probar Figura 20 (Reto)</button>
+                    <button class="btn-blue" onclick="runPatron(50)">Probar Figura 50</button>
+                </div>
+                <div class="live-alert" id="panel-patron" style="background:#f1f5f9;">Haz clic en un botón para iniciar la simulación matemática.</div>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <h2>2. Diseño de un Reto de Equivalencia</h2>
+            <p><strong>Situación problemática (Balanza de equilibrio):</strong> Se presenta una balanza equilibrada con bolsas misteriosas cerradas de peso equivalente ($x$) y cubos sueltos de una unidad.</p>
+            
+            <div class="balance-stage">
+                <div class="balance-beam-container">
+                    <div class="balance-beam" id="brazo-fisico">
+                        
+                        <div class="plate-wrapper left-wrapper" id="platillo-izq">
+                            <div class="string"></div>
+                            <div class="plate">
+                                <div class="item-bag">Bolsa ?</div>
+                                <div class="item-bag">Bolsa ?</div>
+                                <div class="item-cube"></div>
+                                <div class="item-cube"></div>
+                                <div class="item-cube"></div>
+                            </div>
+                            <span style="font-size: 0.75rem; font-weight: bold; margin-top: 4px;">Platillo Izquierdo</span>
+                        </div>
+                        
+                        <div class="plate-wrapper right-wrapper" id="platillo-der">
+                            <div class="string"></div>
+                            <div class="plate">
+                                <div class="item-cube"></div><div class="item-cube"></div><div class="item-cube"></div>
+                                <div class="item-cube"></div><div class="item-cube"></div><div class="item-cube"></div>
+                                <div class="item-cube"></div><div class="item-cube"></div><div class="item-cube"></div>
+                                <div class="item-cube"></div><div class="item-cube"></div>
+                            </div>
+                            <span style="font-size: 0.75rem; font-weight: bold; margin-top: 4px;">Platillo Derecho</span>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="balance-base"></div>
+            </div>
+
+            <p><strong>El reto para el estudiante:</strong> "La balanza está equilibrada. Si las dos bolsas misteriosas tienen el mismo peso interno, ¿cuántos cubos hay ocultos dentro de <strong>una sola bolsa</strong>?"</p>
+
+            <div class="controls-container" style="border-left: 4px solid var(--success);">
+                <strong>⚖️ CONTROL EN VIVO: Haz clic en una respuesta para inclinar la balanza físicamente</strong>
+                <div class="btn-group">
+                    <button class="btn-orange" onclick="runBalanza('baja')">Simular con 2 cubos</button>
+                    <button class="btn-green" onclick="runBalanza('ok')">Simular con 4 cubos (Correcto)</button>
+                    <button class="btn-danger" onclick="runBalanza('alta')">Simular con 6 cubos</button>
+                </div>
+                <div class="live-alert" id="panel-balanza" style="background:#f1f5f9;">La balanza está esperando tu simulación...</div>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <h2>Justificación Didáctica: De lo Concreto a lo Simbólico</h2>
+            <p>El uso integrado de estos materiales tangibles e interactivos permite consolidar el tránsito cognitivo propuesto por Jerome Bruner:</p>
+            
+            <div class="justification-grid">
+                <div class="just-card" style="border-top-color: var(--primary);">
+                    <h4>1. Fase Enactiva (Concreta)</h4>
+                    <p>El estudiante retira de forma real o simulada 3 cubos del platillo izquierdo. Al ver el desequilibrio, comprende intuitivamente que debe retirar 3 cubos del platillo derecho para restaurar el balance.</p>
+                </div>
+                <div class="just-card" style="border-top-color: var(--secondary);">
+                    <h4>2. Fase Icónica (Pictórica)</h4>
+                    <p>Mediante diagramas gráficos y modelos interactivos en pantalla, el estudiante procesa mentalmente que las 2 bolsas equivalen exactamente a los 8 cubos que quedaron en el platillo derecho.</p>
+                </div>
+                <div class="just-card" style="border-top-color: var(--success);">
+                    <h4>3. Fase Simbólica (Abstracta)</h4>
+                    <p>La formalización algebraica deja de ser una regla mecánica sin sentido y se convierte en la traducción matemática natural de sus propias acciones lógicas.</p>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; text-align: center;">Estructura Algebraica Traducida:</h3>
+            <div class="math-expr">
+                2x + 3 = 11 &nbsp;&rArr;&nbsp; 2x = 11 - 3 &nbsp;&rArr;&nbsp; 2x = 8 &nbsp;&rArr;&nbsp; x = 4
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        <p>Estrategia Didáctica de Matemáticas &copy; Callupe Llallico Aaron Sixto - 2026</p>
+    </footer>
+
+    <script>
+        // LÓGICA DEL RETO 1: PATRONES
+        function runPatron(numFigura) {
+            const panel = document.getElementById('panel-patron');
+            const total = numFigura * 2;
+            
+            panel.style.backgroundColor = "#eff6ff";
+            panel.style.borderColor = "var(--primary)";
+            panel.style.color = "var(--primary-dark)";
+            panel.innerHTML = `&iexcl;C&aacute;lculo Exitoso! Para la Figura ${numFigura} se necesitan exactamente ${total} bloques. <br> Regla de generalizaci&oacute;n automatizada: Total = ${numFigura} &times; 2 (Estructura: f(n) = 2n).`;
+        }
+
+        // LÓGICA DEL RETO 2: BALANZA INTERACTIVA FÍSICA
+        function runBalanza(modo) {
+            const brazo = document.getElementById('brazo-fisico');
+            const platilloIzq = document.getElementById('platillo-izq');
+            const platilloDer = document.getElementById('platillo-der');
+            const panel = document.getElementById('panel-balanza');
+
+            if (modo === 'ok') {
+                // Estado: Equilibrio perfecto
+                brazo.style.transform = "rotate(0deg)";
+                platilloIzq.style.transform = "rotate(0deg)";
+                platilloDer.style.transform = "rotate(0deg)";
+                
+                panel.style.backgroundColor = "#f0fdf4";
+                panel.style.borderColor = "var(--success)";
+                panel.style.color = "#166534";
+                panel.innerHTML = "&iexcl;Sincronizaci&oacute;n Perfecta! Con 4 cubos por bolsa: 4 + 4 + 3 = 11. La balanza se mantiene nivelada en 0&deg;, demostrando la propiedad de equivalencia.";
+            } 
+            else if (modo === 'baja') {
+                // Estado: Peso deficiente a la izquierda (Inclinación a la derecha)
+                brazo.style.transform = "rotate(8deg)";
+                platilloIzq.style.transform = "rotate(-8deg)";
+                platilloDer.style.transform = "rotate(-8deg)";
+                
+                panel.style.backgroundColor = "#fff7ed";
+                panel.style.borderColor = "#f97316";
+                panel.style.color = "#9a3412";
+                panel.innerHTML = "&iexcl;Desequilibrio detectado! Si cada bolsa tiene 2 cubos, el lado izquierdo pesa menos (7 cubos) que el derecho (11 cubos). El brazo rota +8&deg;.";
+            } 
+            else if (modo === 'alta') {
+                // Estado: Exceso de peso a la izquierda (Inclinación a la izquierda)
+                brazo.style.transform = "rotate(-8deg)";
+                platilloIzq.style.transform = "rotate(8deg)";
+                platilloDer.style.transform = "rotate(8deg)";
+                
+                panel.style.backgroundColor = "#fef2f2";
+                panel.style.borderColor = "var(--danger)";
+                panel.style.color = "#991b1b";
+                panel.innerHTML = "&iexcl;Desequilibrio detectado! Si cada bolsa tiene 6 cubos, el lado izquierdo excede el peso (15 cubos) frente al derecho (11 cubos). El brazo rota -8&deg;.";
+            }
+        }
+    </script>
+</body>
+</html>
