@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exposición: Explorando el equilibrio en mundos digitales</title>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+    <style>
+        :root {
+            --primary: #005088; 
+            --accent: #11CAA0; 
+            --bg: #f1f5f9; 
+            --text: #1e293b; 
+            --white: #ffffff;
+            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --sidebar-width: 90px;
+        }
+        * { box-sizing: border-box; font-family: 'Outfit', 'Segoe UI', system-ui, sans-serif; }
+        body { margin: 0; background: var(--bg); color: var(--text); overflow-x: hidden; }
+
+        /* Navegación Lateral */
+        .nav-sidebar {
+            position: fixed; left: 0; top: 0; height: 100vh; width: var(--sidebar-width);
+            background: var(--primary); display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 30px; z-index: 100;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .nav-item {
+            color: white; cursor: pointer; opacity: 0.5; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; text-align: center;
+            width: 100%; padding: 10px 0;
+        }
+        .nav-item i { margin-bottom: 5px; width: 28px; height: 28px; }
+        .nav-item:hover, .nav-item.active { opacity: 1; transform: scale(1.1); background: rgba(255,255,255,0.05); }
+        .nav-item.active { border-right: 4px solid var(--accent); color: var(--accent); }
+
+        /* Secciones */
+        section {
+            min-height: 100vh; width: calc(100vw - var(--sidebar-width)); margin-left: var(--sidebar-width);
+            padding: 60px 80px; display: none; animation: slideUp 0.6s ease-out;
+            transition: margin 0.3s ease, width 0.3s ease;
+        }
+        section.active { display: flex; flex-direction: column; }
+
+        @keyframes slideUp { 
+            from { opacity: 0; transform: translateY(30px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        /* Carátula Gigante */
+        .cover {
+            background: linear-gradient(135deg, #004272 0%, #001a2c 100%);
+            color: white; text-align: center; justify-content: center !important;
+            position: relative; overflow: hidden;
+        }
+        .cover::after {
+            content: ''; position: absolute; width: 600px; height: 600px; background: var(--accent);
+            filter: blur(150px); opacity: 0.1; top: -200px; right: -200px; border-radius: 50%;
+        }
+        .cover-box {
+            background: rgba(255,255,255,0.03); padding: 60px; border-radius: 32px;
+            backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1);
+            max-width: 1100px; margin: 0 auto; z-index: 2; box-shadow: var(--shadow);
+            width: 100%;
+        }
+        .cover h1 { font-size: 4.5rem; margin: 10px 0; color: var(--accent); line-height: 1.1; font-weight: 800; }
+        .cover-details { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 50px; text-align: left; }
+        .detail-item b { color: var(--accent); display: block; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; }
+        .detail-item p { font-size: 1.1rem; margin: 0; line-height: 1.5; }
+
+        /* Encabezados de Sección */
+        .section-header { margin-bottom: 40px; }
+        h2 { font-size: 3rem; color: var(--primary); margin: 0; font-weight: 800; display: flex; align-items: center; gap: 20px; }
+        h2::after { content: ''; flex: 1; height: 4px; background: linear-gradient(to right, var(--accent), transparent); border-radius: 2px; }
+
+        /* Cuadrículas y Tarjetas */
+        .card {
+            background: var(--white); padding: 40px; border-radius: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border-top: 8px solid var(--accent);
+            transition: transform 0.3s ease;
+        }
+        .card:hover { transform: translateY(-5px); }
+        .card h3 { margin-top: 0; color: var(--primary); font-size: 1.5rem; display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+        .card p, .card li { font-size: 1.15rem; line-height: 1.7; color: #475569; }
+
+        /* Botones Carátula */
+        .button-group { display: flex; gap: 20px; justify-content: center; margin-top: 40px; flex-wrap: wrap; }
+
+        .btn-start {
+            background: var(--accent); color: white; padding: 18px 50px; border: none;
+            border-radius: 100px; font-size: 1.3rem; font-weight: 800; cursor: pointer;
+            transition: all 0.3s; text-transform: uppercase; letter-spacing: 1px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .btn-start:hover { transform: scale(1.05); filter: brightness(1.1); box-shadow: 0 20px 25px -5px rgba(17, 202, 160, 0.4); }
+
+        .btn-pdf {
+            background: rgba(255,255,255,0.1); color: white; padding: 18px 40px; 
+            border: 2px solid rgba(255,255,255,0.2); border-radius: 100px; 
+            font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: all 0.3s;
+            text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 10px;
+            text-decoration: none;
+        }
+        .btn-pdf:hover { background: #ef4444; border-color: #ef4444; transform: translateY(-5px); }
+
+        .btn-portfolio {
+            background: rgba(255,255,255,0.1); color: white; padding: 18px 40px; 
+            border: 2px solid rgba(255,255,255,0.2); border-radius: 100px; 
+            font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: all 0.3s;
+            text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 10px;
+            text-decoration: none;
+        }
+        .btn-portfolio:hover { background: #3b82f6; border-color: #3b82f6; transform: translateY(-5px); }
+
+        .tag { background: #e2e8f0; color: var(--primary); padding: 4px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 700; margin-right: 8px; }
+
+        /* Tabla */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 1rem; }
+        th, td { border: 1px solid #e2e8f0; padding: 15px; text-align: left; }
+        th { background: #f8fafc; color: var(--primary); font-weight: 800; }
+    </style>
+</head>
+<body>
+
+    <nav class="nav-sidebar">
+        <div class="nav-item active" onclick="showSection('inicio')"><i data-lucide="home"></i>INICIO</div>
+        <div class="nav-item" onclick="showSection('proposito')"><i data-lucide="target"></i>METAS</div>
+        <div class="nav-item" onclick="showSection('secuencia')"><i data-lucide="map"></i>SESIÓN</div>
+        <div class="nav-item" onclick="showSection('estrategia')"><i data-lucide="cpu"></i>DUA/CPA</div>
+        <div class="nav-item" onclick="showSection('evaluacion')"><i data-lucide="check-square"></i>EVALUACIÓN</div>
+    </nav>
+
+    <section id="inicio" class="cover active">
+        <div class="cover-box">
+            <span class="tag" style="background: var(--accent); color: #003358;">EDUCACIÓN PRIMARIA</span>
+            <h1>Explorando el equilibrio en mundos digitales</h1>
+            <p style="font-size: 1.4rem; opacity: 0.8; font-weight: 300;">Vínculos de equivalencia y el uso de variables en 4° grado</p>
+            
+            <div class="cover-details">
+                <div class="detail-item">
+                    <b>CURSO</b>
+                    <p>Didáctica de la Matemática</p>
+                    <br>
+                    <b>Docente</b>
+                    <p>Ore Porras, Guadalupe Cristina</p>
+                </div>
+                <div class="detail-item">
+                    <b>Estudiantes</b>
+                    <p>• Callupe Llallico, Aaron S.<br>
+                       • Inga Moreno, Estefany Y.<br>
+                       • Sánchez Verastegui, Ruth E.</p>
+                </div>
+                <div class="detail-item">
+                    <b>Contexto</b>
+                    <p>Sección: 43871<br>
+                    GRUPO: 12<br>
+                    Año: 2026</p>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-start" onclick="showSection('proposito')">
+                    <i data-lucide="play"></i> Iniciar Presentación
+                </button>
+                <a href="Actividad-13.html" class="btn-pdf">
+                    <i data-lucide="file-text"></i> Ver Sesión
+                </a>
+                <a href="https://callupellallicoaaron.github.io/Didactica-de-la-Matematica/" target="_blank" class="btn-portfolio">
+                    <i data-lucide="layout"></i> Ver Portafolio Digital
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="proposito">
+        <div class="section-header"><h2>Metas de Aprendizaje</h2></div>
+        <div class="card">
+            <h3>Competencia: Resuelve problemas de regularidad, equivalencia y cambio</h3>
+            <p><b>Capacidades:</b> Traduce datos a expresiones algebraicas y comunica su comprensión sobre relaciones algebraicas.</p>
+            <p><b>Desempeño:</b> Establece relaciones entre datos que varían y los transforma a igualdades (ecuaciones) para mantener el equilibrio en un entorno virtual.</p>
+            <p><b>Criterios de evaluación:</b></p>
+            <ul>
+                <li>Representa situaciones de equilibrio en el simulador digital, diferenciando el signo igual como relación de equivalencia.</li>
+                <li>Identifica el valor desconocido (variable) necesario para mantener el equilibrio en la balanza virtual.</li>
+                <li>Explica cómo cambia el equilibrio al modificar las cantidades en la balanza.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="secuencia">
+        <div class="section-header"><h2>Momentos de la Sesión</h2></div>
+        <div class="card">
+            <h3>Inicio (15')</h3><p>Se muestra una representacion grafica de una balanza en la plataforma digital.</p>
+        </div>
+        <div class="card">
+            <h3>Desarrollo (65')</h3><p>Uso del simulador de balanza digital.</p><a href="Actividad-14.1.html" class="tag">Ver Material Digital</a>
+        </div>
+        <div class="card">
+            <h3>Cierre (10')</h3><p>Mural digital (Padlet) sobre el concepto de variable y equilibrio.</p>
+        </div>
+    </section>
+
+    <section id="estrategia">
+        <div class="section-header"><h2>Estrategia DUA y Modelo CPA</h2></div>
+        <div class="card">
+            <h3>Modelo CPA</h3>
+            <ul>
+                <li><b>Concreto:</b> Manipulación de pesas virtuales en pantalla.</li>
+                <li><b>Pictórico:</b> Esquematización visual del equilibrio.</li>
+                <li><b>Abstracto:</b> Escritura formal de ecuaciones (ej: 5 + x = 8).</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h3>Enfoque DUA</h3>
+            <ul>
+                <li><b>Representación:</b> Múltiples medios (visual, auditivo).</li>
+                <li><b>Acción y Expresión:</b> Comandos adaptados y accesibilidad.</li>
+                <li><b>Compromiso:</b> Entornos digitales de alta motivación.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="evaluacion">
+        <div class="section-header"><h2>Lista de Cotejo</h2></div>
+        <div class="card">
+            <table>
+                <tr><th>Criterio de Evaluación</th><th>SÍ</th><th>NO</th></tr>
+                <tr><td>Representa situaciones de equilibrio en el simulador digital, diferenciando el signo igual como relación de equivalencia.</td><td></td><td></td></tr>
+                <tr><td>Identifica el valor desconocido (variable) necesario para mantener el equilibrio en la balanza virtual.</td><td></td><td></td></tr>
+                <tr><td>Explica cómo cambia el equilibrio al modificar las cantidades en la balanza.</td><td></td><td></td></tr>
+            </table>
+        </div>
+    </section>
+
+    <script>
+        function showSection(id) {
+            document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            lucide.createIcons();
+        }
+        lucide.createIcons();
+    </script>
+</body>
+</html>
