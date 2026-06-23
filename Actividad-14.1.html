@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="es">
+ <head><script src="/_sdk/telemetry_sdk.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulador de Balanzas Virtuales</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&amp;family=Fraunces:wght@600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    :root{--ink:#173f3b;--mint:#dff3e7;--deep:#0f5b52;--sun:#f4c95d;--coral:#ee7b63;--paper:#fffdf8;--cream:#f8f3e8;--line:#d8e4da}
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;width:100%}
+    body{font-family:'DM Sans',sans-serif;color:var(--ink);background:linear-gradient(135deg,#f7f1e6,#eef6ee);min-height:100vh}
+    .serif{font-family:'Fraunces',serif}
+    .soft-shadow{box-shadow:0 18px 45px rgba(31,76,70,.12)}
+    .focusable:focus{outline:3px solid #f4c95d;outline-offset:3px}
+    .balance-stage{position:relative;height:340px}
+    .beam{position:absolute;left:50%;top:62px;width:82%;height:12px;background:#24544d;border-radius:999px;transform:translateX(-50%) rotate(0deg);transform-origin:center center;transition:transform .45s ease;box-shadow:0 3px 0 #163b36}
+    .pivot{position:absolute;left:50%;top:65px;transform:translateX(-50%);width:0;height:0;border-left:35px solid transparent;border-right:35px solid transparent;border-bottom:92px solid #2b6d63}
+    .pivot-base{position:absolute;left:50%;bottom:30px;transform:translateX(-50%);width:170px;height:18px;background:#24544d;border-radius:999px}
+    .rope{position:absolute;width:3px;background:#668f86;top:72px;height:100px;transition:top .45s ease}
+    .rope.left-a{left:13%}.rope.left-b{left:37%}.rope.right-a{right:13%}.rope.right-b{right:37%}
+    .plate{position:absolute;top:168px;width:30%;height:18px;background:#deaa45;border-radius:0 0 50% 50%;transition:top .45s ease;box-shadow:0 6px 0 #b98b32}
+    .plate.left{left:10%}.plate.right{right:10%}
+    .plate::before{content:"";position:absolute;left:0;right:0;top:-10px;height:12px;border-radius:50%;border:3px solid #d99e31;background:#f6d982}
+    .items{position:absolute;display:flex;align-items:flex-end;justify-content:center;gap:5px;flex-wrap:wrap;width:28%;min-height:70px;top:102px;transition:top .45s ease}
+    .items.left{left:11%}.items.right{right:11%}
+    .weight{width:20px;height:20px;background:#5f9d8d;border-radius:5px 5px 3px 3px;border:2px solid #37695f;box-shadow:0 2px 0 #37695f;position:relative}
+    .weight:before{content:"";position:absolute;top:-6px;left:5px;width:8px;height:5px;border-radius:3px 3px 0 0;background:#37695f}
+    .mystery{width:40px;height:40px;border-radius:8px;background:#f3a45c;border:3px solid #b86a2c;display:flex;align-items:center;justify-content:center;color:#7b3b11;font-weight:700;font-size:24px;box-shadow:0 3px 0 #b86a2c}
+    .status-dot{width:12px;height:12px;border-radius:999px;display:inline-block}
+    .canvas-wrap{background:#fffaf0;border:2px dashed #d9c79c;border-radius:18px;overflow:hidden}
+    #drawCanvas{width:100%;height:300px;display:block;touch-action:none;background:#fffaf0}
+    .note-card{break-inside:avoid}
+    @media(max-width:768px){.balance-stage{height:280px}.beam{width:85%;top:56px}.pivot{top:58px;border-bottom-width:80px}.items{width:35%;min-height:60px}.items.left{left:7%}.items.right{right:7%}.plate{width:36%;top:155px}.plate.left{left:6%}.plate.right{right:6%}.rope{height:85px;top:66px}#drawCanvas{height:240px}}
+    @media(max-width:640px){.balance-stage{height:240px;margin-top:1rem}.beam{width:80%;top:50px}.pivot{top:52px;border-left-width:28px;border-right-width:28px;border-bottom-width:70px}.pivot-base{width:140px;height:16px;bottom:25px}.items{width:38%;min-height:55px;top:95px}.items.left{left:5%}.items.right{right:5%}.plate{width:40%;top:148px}.plate.left{left:5%}.plate.right{right:5%}.rope{height:75px;top:60px}.weight{width:16px;height:16px}.weight:before{width:6px;height:4px;top:-5px;left:4px}.mystery{width:32px;height:32px;font-size:18px}#drawCanvas{height:200px}}
+  </style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/resizing_sdk.js" type="text/javascript"></script>
+ </head>
+ <body data-template-id="__page-root" class="w-full min-h-screen">
+  <div class="w-full">
+   <header class="w-full px-5 md:px-8 py-6">
+    <div class="max-w-7xl mx-auto flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+     <div>
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#dff3e7] mb-3"><i data-lucide="scale" class="w-4 h-4"></i> <span data-template-id="relation-badge" class="canva-tag text-xs font-semibold tracking-wide uppercase">Aprende desde el equilibrio</span>
+      </div>
+      <h1 data-template-id="main-title" class="canva-text serif text-[2rem] md:text-[3rem] leading-tight">La balanza de la incógnita</h1>
+      <p data-template-id="main-subtitle" class="canva-text max-w-2xl mt-2 text-base md:text-lg">Explora cómo una variable puede mantener el equilibrio entre dos cantidades.</p>
+     </div>
+     <div class="hidden lg:flex items-center gap-3 rounded-2xl bg-white/80 border border-[#dfe9df] px-4 py-3 soft-shadow">
+      <div class="w-11 h-11 rounded-xl bg-[#f4c95d] flex items-center justify-center">
+       <i data-lucide="equal" class="w-5 h-5"></i>
+      </div>
+      <div>
+       <p class="text-xs uppercase tracking-[.18em] text-[#6f8c84]">Idea clave</p>
+       <p class="font-semibold text-sm">"=" significa que ambos lados valen lo mismo</p>
+      </div>
+     </div>
+    </div>
+   </header>
+   <main class="max-w-7xl mx-auto px-4 sm:px-5 md:px-8 pb-6 sm:pb-8 md:pb-10">
+    <section class="grid xl:grid-cols-[1.6fr_.9fr] gap-3 sm:gap-4 md:gap-6"><!-- Simulator -->
+     <article data-template-id="sim-card" class="canva-card rounded-[28px] p-5 md:p-7 soft-shadow border border-[#dce8df]">
+      <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+       <div>
+        <p class="text-xs uppercase tracking-[.2em] text-[#6b938a] mb-2">Explora · compara · explica</p>
+        <h2 data-template-id="sim-title" class="canva-text serif text-[1.7rem] md:text-[2rem]">Simulador interactivo</h2>
+        <p data-template-id="sim-helper" class="canva-text mt-1 max-w-xl">Cada pesa vale 1. La caja esconde un número que debes descubrir.</p>
+       </div>
+       <div class="rounded-2xl bg-[#eef7f1] px-4 py-3 min-w-[220px] border border-[#d6eadf]">
+        <div class="flex items-center gap-2"><span id="statusDot" class="status-dot bg-[#64a779]"></span>
+         <p id="balanceStatus" class="font-bold text-[#245d51]">En equilibrio</p>
+        </div>
+        <p id="balanceStatusDetail" class="text-sm mt-1 text-[#668278]">Ambos lados tienen el mismo valor.</p>
+       </div>
+      </div>
+      <div class="balance-stage mt-4" aria-live="polite" aria-label="Balanza interactiva">
+       <div id="beam" class="beam"></div>
+       <div class="pivot"></div>
+       <div class="pivot-base"></div>
+       <div id="leftRopeA" class="rope left-a"></div>
+       <div id="leftRopeB" class="rope left-b"></div>
+       <div id="rightRopeA" class="rope right-a"></div>
+       <div id="rightRopeB" class="rope right-b"></div>
+       <div id="leftItems" class="items left">
+        <div class="mystery">
+         ?
+        </div>
+       </div>
+       <div id="rightItems" class="items right"></div>
+       <div id="leftPlate" class="plate left"></div>
+       <div id="rightPlate" class="plate right"></div>
+      </div>
+      <div class="grid md:grid-cols-2 gap-2 sm:gap-3 md:gap-4 mt-3">
+       <div class="rounded-2xl bg-[#f7fbf8] border border-[#dfeade] p-3 sm:p-4">
+        <div class="flex items-center justify-between mb-2">
+         <h3 class="font-bold text-sm sm:text-base">Lado izquierdo</h3><span class="text-xs bg-[#e6f2ec] px-2 py-1 rounded-full">Caja + pesas</span>
+        </div>
+        <div class="grid grid-cols-2 gap-2"><button id="addLeft" class="focusable rounded-xl px-3 py-2 font-bold text-sm flex items-center justify-center gap-1 bg-[#2f7468] text-white" type="button"><i data-lucide="plus" class="w-4 h-4"></i>Agregar</button> <button id="removeLeft" class="focusable rounded-xl px-3 py-2 font-bold text-sm flex items-center justify-center gap-1 bg-[#e8f2ed] text-[#24574e]" type="button"><i data-lucide="minus" class="w-4 h-4"></i>Quitar</button>
+        </div>
+       </div>
+       <div class="rounded-2xl bg-[#fffaf1] border border-[#efe1bf] p-3 sm:p-4">
+        <div class="flex items-center justify-between mb-2">
+         <h3 class="font-bold text-sm sm:text-base">Lado derecho</h3><span class="text-xs bg-[#fff0c9] px-2 py-1 rounded-full">Pesas</span>
+        </div>
+        <div class="grid grid-cols-2 gap-2"><button id="addRight" class="focusable rounded-xl px-3 py-2 font-bold text-sm flex items-center justify-center gap-1 bg-[#fff0c9] text-[#9a7221]" type="button"><i data-lucide="plus" class="w-4 h-4"></i>Agregar</button> <button id="removeRight" class="focusable rounded-xl px-3 py-2 font-bold text-sm flex items-center justify-center gap-1 bg-[#fff1cf] text-[#896119]" type="button"><i data-lucide="minus" class="w-4 h-4"></i>Quitar</button>
+        </div>
+       </div>
+      </div>
+      <div class="grid grid-cols-3 gap-2 mt-4"><button id="audioButton" class="focusable rounded-xl px-3 py-2 font-bold text-sm flex items-center justify-center gap-1 bg-[#dff3e7] text-[#2b6d63]" type="button"><i data-lucide="volume-2" class="w-4 h-4"></i><span class="hidden sm:inline">Audio</span></button> <button id="voiceButton" class="focusable rounded-xl px-3 py-2 font-bold text-sm flex items-center justify-center gap-1 bg-[#ee7b63] text-white" type="button"><i data-lucide="mic" class="w-4 h-4"></i><span class="hidden sm:inline">Voz</span></button>
+       <div class="rounded-xl bg-[#fff0c9] px-3 py-2 flex items-center justify-center gap-1">
+        <i data-lucide="keyboard" class="w-4 h-4"></i><span class="text-xs font-bold">A/Z/K/M</span>
+       </div>
+      </div>
+     </article><!-- Challenge -->
+     <aside class="space-y-4">
+      <section data-template-id="challenge-card" class="canva-card rounded-[24px] p-4 sm:p-5 border border-[#eadfc5] soft-shadow">
+       <div class="flex items-start gap-3 mb-4">
+        <div class="w-11 h-11 rounded-xl bg-[#f4c95d] flex items-center justify-center flex-shrink-0">
+         <i data-lucide="sparkles" class="w-5 h-5"></i>
+        </div>
+        <div>
+         <p class="text-xs uppercase tracking-[.18em] font-bold text-[#315c54]">Desafío</p>
+         <h2 id="challengeEquation" class="serif text-lg md:text-xl lg:text-[1.7rem] text-[#17443d] font-bold"></h2>
+        </div>
+       </div>
+       <p class="text-sm leading-6 text-[#56736d] mb-4">Encuentra el valor escondido de la caja para que ambos lados sigan teniendo el mismo valor.</p>
+       <div><label for="guessInput" class="block text-sm font-bold mb-2 text-[#315c54]">¿Qué número está escondido?</label>
+        <div class="flex gap-2"><input id="guessInput" type="number" class="focusable flex-1 min-w-0 rounded-xl border border-[#bfd5ca] bg-white px-4 py-3 text-lg font-bold"> <button id="checkButton" class="focusable rounded-xl px-4 py-3 font-bold text-sm bg-[#2f7468] text-white whitespace-nowrap" type="button">Comprobar</button>
+        </div>
+        <p id="feedback" class="mt-3 min-h-[44px] text-sm leading-5 text-[#6b7f77]"></p>
+       </div>
+      </section>
+     </aside>
+    </section><!-- Drawing + Wall -->
+    <section class="grid lg:grid-cols-[1.1fr_.9fr] gap-3 sm:gap-4 md:gap-6 mt-5">
+     <article data-template-id="draw-card" class="canva-card rounded-[28px] p-4 md:p-6 border border-[#e8dec7] soft-shadow">
+      <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-4">
+       <div>
+        <h2 data-template-id="draw-title" class="canva-text serif text-lg md:text-xl lg:text-[1.6rem]">Dibuja tu propia balanza</h2>
+        <p data-template-id="draw-desc" class="canva-text text-sm mt-1 max-w-xl">Representa tu idea con dibujos, flechas o una estrella para marcar la variable.</p>
+       </div>
+       <div class="flex gap-2 flex-shrink-0"><button id="penTool" class="focusable rounded-xl px-3 py-2 font-bold text-sm flex items-center gap-1 bg-[#e6f2ec] text-[#275f55]" type="button"><i data-lucide="pencil" class="w-4 h-4"></i>Lápiz</button> <button id="starTool" class="focusable rounded-xl px-3 py-2 font-bold text-sm flex items-center gap-1 bg-[#fff0c9] text-[#87611c]" type="button"><i data-lucide="star" class="w-4 h-4"></i>Estrella</button> <button id="clearCanvas" class="focusable rounded-xl px-3 py-2 font-bold text-sm flex items-center gap-1 bg-[#fde6df] text-[#9d4f3b]" type="button"><i data-lucide="eraser" class="w-4 h-4"></i>Borrar</button>
+       </div>
+      </div>
+      <div class="canvas-wrap">
+       <canvas id="drawCanvas" width="900" height="300" aria-label="Espacio de dibujo"></canvas>
+      </div>
+     </article>
+     <article data-template-id="wall-card-section" class="canva-card rounded-[28px] p-4 md:p-6 border border-[#dbe8df] soft-shadow">
+      <div class="mb-4">
+       <h2 data-template-id="wall-title" class="canva-text serif text-lg md:text-xl lg:text-[1.6rem]">Mueve, observa y piensa</h2>
+       <p data-template-id="wall-desc" class="canva-text text-sm mt-1">Comparte una frase sobre qué es una variable o cómo se mantiene el equilibrio.</p>
+      </div>
+      <form id="wallForm" class="space-y-3 mb-5">
+       <div><label for="studentName" class="block text-sm font-bold mb-1 text-[#315c54]">Tu nombre</label> <input id="studentName" class="focusable w-full rounded-xl border border-[#c6dbd0] px-3 py-3 bg-white text-sm" type="text" maxlength="40" placeholder="Escribe tu nombre">
+       </div>
+       <div><label for="studentMessage" class="block text-sm font-bold mb-1 text-[#315c54]">Tu reflexión</label> <textarea id="studentMessage" class="focusable w-full rounded-xl border border-[#c6dbd0] px-3 py-3 bg-white text-sm resize-none" rows="3" maxlength="150" placeholder="Escribe aquí tu reflexión"></textarea>
+       </div><button id="publishButton" class="focusable w-full rounded-xl px-4 py-3 font-bold text-sm flex items-center justify-center gap-2 bg-[#2f7468] text-white" type="submit"><i data-lucide="send" class="w-4 h-4"></i>Publicar idea</button>
+       <p id="wallMessage" class="text-sm min-h-[20px] text-[#6b7f77]"></p>
+      </form>
+      <div>
+       <div class="flex items-center justify-between mb-3">
+        <h3 class="font-bold text-base">Ideas compartidas</h3><span id="wallCount" class="text-xs rounded-full bg-[#e4f2ea] px-2 py-1 text-[#477267]">0 aportes</span>
+       </div>
+       <div id="wallList" class="space-y-2 max-h-[280px] overflow-auto pr-1"></div>
+      </div>
+     </article>
+    </section>
+   </main>
+  </div>
+  <script src="/_sdk/editing_sdk.js"></script>
+  <script>
+    const hiddenValue = 3;
+    let leftWeights = 2;
+    let rightWeights = 5;
+    let wallNotes = [];
+
+    const beam = document.getElementById('beam');
+    const leftItems = document.getElementById('leftItems');
+    const rightItems = document.getElementById('rightItems');
+    const leftPlate = document.getElementById('leftPlate');
+    const rightPlate = document.getElementById('rightPlate');
+    const leftRopes = [document.getElementById('leftRopeA'), document.getElementById('leftRopeB')];
+    const rightRopes = [document.getElementById('rightRopeA'), document.getElementById('rightRopeB')];
+    const balanceStatus = document.getElementById('balanceStatus');
+    const balanceStatusDetail = document.getElementById('balanceStatusDetail');
+    const statusDot = document.getElementById('statusDot');
+    const feedback = document.getElementById('feedback');
+    const challengeEquation = document.getElementById('challengeEquation');
+
+    function createWeight(){
+      const d=document.createElement('div');d.className='weight';d.setAttribute('aria-hidden','true');return d;
+    }
+
+    function renderWeights(){
+      [...leftItems.querySelectorAll('.weight')].forEach(el=>el.remove());
+      [...rightItems.querySelectorAll('.weight')].forEach(el=>el.remove());
+      for(let i=0;i<leftWeights;i++) leftItems.appendChild(createWeight());
+      for(let i=0;i<rightWeights;i++) rightItems.appendChild(createWeight());
+      updateBalance();
+      challengeEquation.textContent = `□ + ${leftWeights} = ${rightWeights}`;
+    }
+
+    function updateBalance(){
+      const leftTotal=hiddenValue+leftWeights, rightTotal=rightWeights;
+      const diff=leftTotal-rightTotal;
+      const angle=Math.max(-9,Math.min(9,diff*-3));
+      beam.style.transform=`translateX(-50%) rotate(${angle}deg)`;
+      const leftShift=diff>0?-14:diff<0?14:0;
+      const rightShift=diff<0?-14:diff>0?14:0;
+      [leftItems,leftPlate].forEach(el=>el.style.top=(el.classList.contains('items')?102-leftShift:168-leftShift)+'px');
+      [rightItems,rightPlate].forEach(el=>el.style.top=(el.classList.contains('items')?102-rightShift:168-rightShift)+'px');
+      leftRopes.forEach(el=>el.style.height=(100-leftShift)+'px');
+      rightRopes.forEach(el=>el.style.height=(100-rightShift)+'px');
+      if(diff===0){statusDot.className='status-dot bg-[#58a66a]';balanceStatus.textContent='En equilibrio';balanceStatusDetail.textContent='Ambos lados tienen el mismo valor.';}
+      else if(diff>0){statusDot.className='status-dot bg-[#ee7b63]';balanceStatus.textContent='Izquierda más pesada';balanceStatusDetail.textContent='El lado izquierdo tiene mayor valor.';}
+      else{statusDot.className='status-dot bg-[#ee7b63]';balanceStatus.textContent='Derecha más pesada';balanceStatusDetail.textContent='El lado derecho tiene mayor valor.';}
+    }
+
+    document.getElementById('addLeft').addEventListener('click',()=>{leftWeights++;renderWeights();});
+    document.getElementById('removeLeft').addEventListener('click',()=>{if(leftWeights>0){leftWeights--;renderWeights();}});
+    document.getElementById('addRight').addEventListener('click',()=>{rightWeights++;renderWeights();});
+    document.getElementById('removeRight').addEventListener('click',()=>{if(rightWeights>0){rightWeights--;renderWeights();}});
+
+    document.getElementById('checkButton').addEventListener('click',()=>{
+      const input=document.getElementById('guessInput');
+      if(input.value.trim()===''){feedback.textContent='Escribe un número para probar tu idea.';feedback.style.color='#a65a1f';return;}
+      if(Number(input.value)===hiddenValue){feedback.textContent='¡Exacto! La caja vale 3. Así, ambos lados representan la misma cantidad.';feedback.style.color='#28775e';}
+      else{feedback.textContent='Aún no. Piensa: si la caja más las pesas debe igualar el otro lado, ¿qué valor falta?';feedback.style.color='#b35f3d';}
+    });
+
+    document.getElementById('audioButton').addEventListener('click',()=>{
+      if('speechSynthesis' in window){
+        window.speechSynthesis.cancel();
+        const lt=hiddenValue+leftWeights,rt=rightWeights;
+        let msg=lt===rt?'La balanza está en equilibrio.':lt>rt?'El lado izquierdo tiene mayor peso.':'El lado derecho tiene mayor peso.';
+        const u=new SpeechSynthesisUtterance(msg);u.lang='es-ES';u.rate=.9;window.speechSynthesis.speak(u);
+      }
+    });
+
+    const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+    const voiceBtn=document.getElementById('voiceButton');
+    if(SpeechRecognition){
+      const rec=new SpeechRecognition();rec.lang='es-ES';rec.interimResults=false;
+      rec.onresult=(e)=>{const t=e.results[0][0].transcript.toLowerCase();
+        if(t.includes('agregar izquierda')||t.includes('añadir izquierda')){leftWeights++;renderWeights();}
+        else if(t.includes('quitar izquierda')&&leftWeights>0){leftWeights--;renderWeights();}
+        else if(t.includes('agregar derecha')||t.includes('añadir derecha')){rightWeights++;renderWeights();}
+        else if(t.includes('quitar derecha')&&rightWeights>0){rightWeights--;renderWeights();}
+        else if(t.includes('leer')||t.includes('estado')){document.getElementById('audioButton').click();}
+      };
+      voiceBtn.addEventListener('click',()=>rec.start());
+    }
+
+    document.addEventListener('keydown',(e)=>{
+      if(['INPUT','TEXTAREA'].includes(document.activeElement.tagName))return;
+      const k=e.key.toLowerCase();
+      if(k==='a'){leftWeights++;renderWeights();}
+      if(k==='z'&&leftWeights>0){leftWeights--;renderWeights();}
+      if(k==='k'){rightWeights++;renderWeights();}
+      if(k==='m'&&rightWeights>0){rightWeights--;renderWeights();}
+      if(k==='r'){document.getElementById('audioButton').click();}
+    });
+
+    // Canvas drawing
+    const canvas=document.getElementById('drawCanvas'),ctx=canvas.getContext('2d');
+    let drawing=false,mode='pen';
+    ctx.lineWidth=4;ctx.lineCap='round';ctx.strokeStyle='#1f665b';
+    function getPos(e){const r=canvas.getBoundingClientRect(),p=e.touches?e.touches[0]:e;return{x:(p.clientX-r.left)*(canvas.width/r.width),y:(p.clientY-r.top)*(canvas.height/r.height)};}
+    function startDraw(e){e.preventDefault();const p=getPos(e);if(mode==='star'){drawStar(p.x,p.y,15);return;}drawing=true;ctx.beginPath();ctx.moveTo(p.x,p.y);}
+    function moveDraw(e){if(!drawing)return;e.preventDefault();const p=getPos(e);ctx.lineTo(p.x,p.y);ctx.stroke();}
+    function stopDraw(){drawing=false;}
+    function drawStar(cx,cy,r){ctx.save();ctx.fillStyle='#f4c95d';ctx.strokeStyle='#9d7a21';ctx.lineWidth=2;ctx.beginPath();for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rd=i%2===0?r:r/2;const x=cx+Math.cos(a)*rd,y=cy+Math.sin(a)*rd;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();}
+    canvas.addEventListener('mousedown',startDraw);canvas.addEventListener('mousemove',moveDraw);canvas.addEventListener('mouseup',stopDraw);canvas.addEventListener('mouseleave',stopDraw);
+    canvas.addEventListener('touchstart',startDraw,{passive:false});canvas.addEventListener('touchmove',moveDraw,{passive:false});canvas.addEventListener('touchend',stopDraw);
+    document.getElementById('clearCanvas').addEventListener('click',()=>ctx.clearRect(0,0,canvas.width,canvas.height));
+    document.getElementById('penTool').addEventListener('click',()=>mode='pen');
+    document.getElementById('starTool').addEventListener('click',()=>mode='star');
+
+    // Wall (local only)
+    const wallList=document.getElementById('wallList'),wallMessage=document.getElementById('wallMessage'),wallCount=document.getElementById('wallCount');
+    document.getElementById('wallForm').addEventListener('submit',(e)=>{
+      e.preventDefault();
+      const name=document.getElementById('studentName').value.trim(),msg=document.getElementById('studentMessage').value.trim();
+      if(!name||!msg){wallMessage.textContent='Completa tu nombre y tu idea antes de publicar.';wallMessage.style.color='#b35f3d';return;}
+      wallNotes.unshift({name,msg,date:new Date()});
+      renderWall();
+      document.getElementById('wallForm').reset();
+      wallMessage.textContent='¡Tu idea ya está en el mural!';wallMessage.style.color='#28775e';
+    });
+
+    function renderWall(){
+      wallList.innerHTML='';
+      wallNotes.forEach(n=>{
+        const card=document.createElement('article');
+        card.className='note-card rounded-2xl p-3 border border-[#dce8df] bg-[#f8fcf9]';
+        card.innerHTML=`<div class="flex items-center justify-between gap-2"><h4 class="font-bold text-sm truncate text-[#24564f]">${esc(n.name)}</h4><span class="text-[11px] text-[#7f988f] flex-shrink-0">${n.date.toLocaleDateString('es-PE',{day:'2-digit',month:'short'})}</span></div><p class="text-sm mt-1 leading-5 text-[#4c6b63]">${esc(n.msg)}</p>`;
+        wallList.appendChild(card);
+      });
+      wallCount.textContent=wallNotes.length===1?'1 aporte':`${wallNotes.length} aportes`;
+    }
+    function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+
+    renderWeights();
+    lucide.createIcons();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1059ebd96066e01',t:'MTc4MjI0MDAxNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
