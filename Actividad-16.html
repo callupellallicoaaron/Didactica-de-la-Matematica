@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actividad de Aprendizaje Inclusiva - V Ciclo Estadística</title>
+    <style>
+        /* Estilos Globales y Variables */
+        :root {
+            --primary-color: #1e1e2f;
+            --secondary-color: #3b3b54;
+            --accent-color: #00adb5;
+            --text-color: #eeeeee;
+            --bg-light: #f4f6f9;
+            --text-dark: #222831;
+            --border-radius: 8px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            padding: 2.5rem 1rem;
+            text-align: center;
+            border-bottom: 5px solid var(--accent-color);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+
+        header p {
+            margin: 0.5rem 0 0 0;
+            font-size: 1.1rem;
+            color: #a0a0ba;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Componentes y Secciones */
+        section {
+            background: #ffffff;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            border-left: 5px solid var(--accent-color);
+            padding-left: 0.75rem;
+            margin-top: 0;
+            font-size: 1.6rem;
+        }
+
+        h3 {
+            color: var(--secondary-color);
+            font-size: 1.25rem;
+            margin-top: 1.5rem;
+        }
+
+        hr {
+            border: 0;
+            height: 1px;
+            background: #e0e0e0;
+            margin: 2rem 0;
+        }
+
+        /* Metadatos de la Actividad */
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            background: #f8f9fa;
+            padding: 1.25rem;
+            border-radius: var(--border-radius);
+            border: 1px solid #e9ecef;
+            margin-bottom: 1.5rem;
+        }
+
+        .meta-item strong {
+            color: var(--secondary-color);
+            display: block;
+        }
+
+        /* Listas Estilizadas */
+        ul {
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Bloques de Alerta / Enfoques */
+        .badge-container {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+
+        .badge {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .badge-dua { background-color: #28a745; }
+        .badge-cpa { background-color: #fd7e14; }
+
+        /* Estilos de Tabla */
+        .table-responsive {
+            overflow-x: auto;
+            margin-top: 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            padding: 1rem;
+            border: 1px solid #dee2e6;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        /* Resaltados dentro del texto */
+        .highlight-box {
+            background-color: #e6f7f8;
+            border-left: 4px solid var(--accent-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+        }
+
+        .highlight-box p {
+            margin: 0;
+            font-style: italic;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            background-color: var(--primary-color);
+            color: #a0a0ba;
+            margin-top: 3rem;
+            font-size: 0.9rem;
+            border-top: 3px solid var(--accent-color);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Planificación Curricular con Enfoque CPA y DUA</h1>
+        <p>Diseño de Estrategias Didácticas Disruptivas para Educación Primaria</p>
+    </header>
+
+    <div class="container">
+
+        <!-- SECCIÓN 1: DATOS GENERALES -->
+        <section id="datos-generales">
+            <h2>I. Información General de la Actividad</h2>
+            
+            <div class="meta-grid">
+                <div class="meta-item">
+                    <strong>Título de la actividad:</strong>
+                    "Analizamos los datos de nuestras pantallas: ¿Qué nos recomienda el algoritmo?"
+                </div>
+                <div class="meta-item">
+                    <strong>Grado y Ciclo:</strong>
+                    5to de Primaria (V Ciclo)
+                </div>
+                <div class="meta-item">
+                    <strong>Duración:</strong>
+                    90 minutos
+                </div>
+                <div class="meta-item">
+                    <strong>Contexto Real:</strong>
+                    Entretimiento digital, Streamers y Videojuegos
+                </div>
+            </div>
+
+            <h3>Enfoques Pedagógicos e Inclusivos Estructurados:</h3>
+            <ul>
+                <li><strong>Modelo CPA:</strong> Tránsito sistemático por las fases Concreta (manipulación física de bloques), Pictorial (construcción de gráficos bidimensionales con lanas y cartulinas) y Abstracta (traducción a valores numéricos, porcentajes y conclusiones simbólicas).</li>
+                <li><strong>Enfoque Inclusivo (DUA):</strong> Implementación de múltiples formas de implicación mediante mecánicas gamificadas, múltiples formas de representación con texturas y alto contraste, y múltiples formas de acción y expresión en la resolución y comunicación de resultados.</li>
+            </ul>
+        </section>
+
+        <!-- SECCIÓN 2: SECUENCIA DIDÁCTICA -->
+        <section id="secuencia-didactica">
+            <h2>II. Secuencia Didáctica (Ruta CPA + DUA)</h2>
+
+            <!-- INICIO -->
+            <h3>1. INICIO (15 minutos)</h3>
+            <ul>
+                <li><strong>Motivación y Saberes Previos:</strong> El docente ingresa al aula y presenta un cartel impreso gigante que emula la interfaz o pantalla de inicio de plataformas de streaming populares (como YouTube, Netflix o Twitch). Dicho cartel cuenta con espacios estratégicamente vacíos para colocar miniaturas de contenido. El docente plantea el escenario retador: <em>"Chicos, imaginen que somos creadores de contenido (Streamers) y queremos que la plataforma recomiende nuestros videos en su página principal. El 'algoritmo' de la pantalla solo muestra lo que a la mayoría de la gente le interesa. Si tuviéramos que armar la pantalla de inicio ideal para el salón de 5to grado, ¿qué tipo de videos o juegos deberían aparecer primero para que todos le den clic?"</em></li>
+                <li><strong>Conflicto cognitivo:</strong> Se moviliza el pensamiento crítico con las siguientes interrogantes: ¿Cómo podemos saber con exactitud científica qué contenido es el favorito del salón sin adivinar? Si a 10 les gusta un juego de estrategia, a 12 uno de carreras y a 5 los videos de música, ¿cómo lo demostramos visualmente para 'programar' nuestra pantalla?</li>
+                <li><strong>Propósito de la sesión:</strong> El docente declara el norte de la sesión de manera explícita: <strong>"Hoy aprenderemos a recopilar datos sobre nuestras preferencias de entretenimiento digital, organizarlos en tablas de frecuencias con intervalos y representarlos en gráficos de barras dobles y líneas para entender cómo toman decisiones los algoritmos reales"</strong>.</li>
+            </ul>
+
+            <hr>
+
+            <!-- DESARROLLO -->
+            <h3>2. DESARROLLO (60 minutos) - Ruta CPA</h3>
+            
+            <h4>A. Fase Concreta (Manipulación y votación física) <span class="badge badge-cpa">Fase Concreta</span></h4>
+            <ul>
+                <li>Cada estudiante recibe una "tarjeta de usuario" consistente en un bloque de plástico (tipo Lego) o una ficha de color específica que representa su categoría de entretenimiento favorita: Verde para Videojuegos, Azul para Música/Baile, Rojo para Deportes/Retos y Amarillo para Tutoriales/Ciencia.</li>
+                <li>Se disponen en el aula contenedores transparentes debidamente rotulados. Cada estudiante se desplaza y deposita físicamente su bloque en el contenedor de su preferencia.</li>
+                <li>Los estudiantes manipulan, apilan y comparan físicamente las torres de bloques que se han consolidado dentro de los contenedores para determinar de manera directa cuál constituye el "pico más alto" (noción intuitiva de la Moda).</li>
+                <li><span class="badge badge-dua">Estrategia DUA:</span> Los bloques integran texturas diferenciadas o etiquetas en sistema Braille/macrotipos para estudiantes con baja visión o discapacidad visual. Asimismo, los contenedores emplean colores de alto contraste y soporte iconográfico explícito (como el dibujo de un mando de consola o una nota musical).</li>
+            </ul>
+
+            <h4>B. Fase Pictorial (El mapa del algoritmo) <span class="badge badge-cpa">Fase Pictorial</span></h4>
+            <ul>
+                <li><strong>Paso 1 (Tabla de frecuencias):</strong> Organizados en equipos de trabajo, los estudiantes reciben un papelógrafo estructurado como un "Tablero de Programación". Trasladan el conteo físico de los bloques mediante el registro de marcas gráficas e íconos en la tabla correspondiente.</li>
+                <li><strong>Paso 2 (Gráfico de barras dobles o de líneas):</strong> Para elevar el nivel de complejidad al estándar del V Ciclo, los equipos proceden a comparar dos variables simultáneamente (por ejemplo: Preferencias de la Sección A frente a la Sección B, o Preferencias segregadas por tiempo de uso: menos de 1 hora frente a más de 1 hora). Construyen el gráfico aplicando tiras de cartulina de dos colores diferenciados para las barras dobles, o uniendo puntos clave con lanas de colores para configurar un gráfico de líneas sobre un plano cuadriculado de gran escala.</li>
+                <li><span class="badge badge-dua">Estrategia DUA:</span> La utilización de lanas provee un relieve táctil que asiste a estudiantes con estilos de aprendizaje kinestésico o discapacidad visual a "sentir" de manera física si la tendencia de la gráfica asciende o desciende. Adicionalmente, se facilitan plantillas prediseñadas para mitigar la carga de dibujo técnico en los alumnos que requieran este soporte.</li>
+            </ul>
+
+            <h4>C. Fase Abstracta (Fórmulas y conclusiones del Algoritmo) <span class="badge badge-cpa">Fase Abstracta</span></h4>
+            <ul>
+                <li>Los estudiantes transmutan las marcas pictóricas y el trazado de las lanas en números abstractos y expresiones porcentuales de cálculo sencillo (por ejemplo: <em>"12 de 24 alumnos prefieren videojuegos, lo que equivale al 50%"</em>).</li>
+                <li>Se formulan y resuelven preguntas de análisis crítico y procesamiento avanzado: ¿Qué categoría es la Moda matemática en nuestro salón? Si el algoritmo tuviera que recomendar un video para asegurar que el salón lo vea, ¿cuál elegiría? ¿Qué categoría definitivamente dejaría fuera del inicio?</li>
+                <li>Cada equipo redacta su conclusión con rigor matemático formal en su papelógrafo: <div class="highlight-box"><p>"El algoritmo de 5to grado debe recomendar un 50% de contenido de videojuegos y un 10% de música porque la frecuencia de los primeros duplica a la de los segundos".</p></div></li>
+            </ul>
+
+            <hr>
+
+            <!-- CIERRE -->
+            <h3>3. CIERRE (15 minutos)</h3>
+            <ul>
+                <li><strong>Metacognición:</strong> Se guía la autoevaluación del proceso mediante un diálogo reflexivo basado en las siguientes preguntas: ¿Cómo nos ayudaron los bloques a entender la preferencia del salón? ¿Por qué las empresas tecnológicas usan gráficos de datos en lugar de solo adivinar? ¿Cómo impacta esto en el tiempo que pasamos frente a las pantallas?</li>
+                <li><strong>Evaluación Inclusiva:</strong> Cada equipo "programa" su panel o cartel gigante fijando las imágenes de las temáticas ganadoras con base estricta en sus métricas obtenidas. La sustentación de los hallazgos puede realizarse de forma oral, mediante un reporte de texto breve o exponiendo el diseño final de la interfaz interactiva con el uso de señas o apoyos visuales alternativos.</li>
+            </ul>
+        </section>
+
+        <!-- SECCIÓN 3: CUADRO CURRICULAR CNEB -->
+        <section id="cuadro-curricular">
+            <h2>III. Cuadro de Vinculación Curricular (CNEB - V Ciclo)</h2>
+            <p>A continuación se detalla la matriz técnica e institucional que fundamenta científicamente la intervención pedagógica conforme al Currículo Nacional de la Educación Básica de Perú:</p>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Conocimientos (Temas)</th>
+                            <th>Competencia</th>
+                            <th>Capacidades</th>
+                            <th>Desempeño Precisado (5to de Primaria)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <ul>
+                                    <li>Variables cualitativas (categorías de video) y cuantitativas discretas (horas de consumo).</li>
+                                    <li>Tablas de frecuencias de doble entrada.</li>
+                                    <li>Gráficos de barras dobles y gráficos de líneas.</li>
+                                    <li>Moda y lectura analítica de tendencias.</li>
+                                </ul>
+                            </td>
+                            <td>
+                                <strong>Resuelve problemas de gestión de datos e incertidumbre.</strong>
+                            </td>
+                            <td>
+                                <ul>
+                                    <li><strong>Representa datos</strong> con gráficos y medidas estadísticas o probabilísticas.</li>
+                                    <li><strong>Comunica su comprensión</strong> de los conceptos estadísticos y probabilísticos.</li>
+                                    <li><strong>Usa estrategias y procedimientos</strong> para recopilar y procesar datos.</li>
+                                    <li><strong>Sustenta conclusiones</strong> o decisiones con base en la información obtenida.</li>
+                                </ul>
+                            </td>
+                            <td>
+                                <ul>
+                                    <li><strong>Recopila datos</strong> sobre las preferencias tecnológicas de sus compañeros mediante cuestionarios interactivos, los organiza en tablas de doble entrada y los <strong>representa en gráficos de barras dobles o de líneas</strong>, determinando la escala adecuada.</li>
+                                    <li><strong>Interpreta información</strong> contenida en estos gráficos para identificar regularidades, la moda y <strong>expresar conclusiones</strong> sobre el comportamiento del consumo digital del grupo, justificando sus decisiones con base en los resultados obtenidos.</li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>Estrategia Didáctica para el Área de Matemática • Enfoque por Competencias CNEB</p>
+    </footer>
+
+</body>
+</html>

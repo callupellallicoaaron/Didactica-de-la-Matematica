@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¿Cómo funcionan las redes sociales? - Simulador para Niños</title>
+    <style>
+        :root {
+            --bg-light: #f4f6f9;
+            --panel-bg: #ffffff;
+            --panel-inner: #f8fafc;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+            
+            /* Colores Paso 1 y 2 */
+            --gaming: #10b981;
+            --musica: #0ea5e9;
+            --deportes: #ef4444;
+            --ciencia: #f59e0b;
+
+            /* Colores Paso 3 (Frutas) */
+            --platano: #eab308;
+            --manzana: #dc2626;
+            --naranja: #f97316;
+            --fresa: #ec4899;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+        }
+
+        /* BANNER COMPACTO */
+        header {
+            background: linear-gradient(135deg, #e2e8f0 0%, #f1f5f9 100%);
+            padding: 0.8rem 1.5rem;
+            text-align: center;
+            border-bottom: 4px solid #cbd5e1;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            color: #0f172a;
+        }
+
+        .subtitle {
+            margin: 3px 0;
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .audio-control-container {
+            margin-top: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #ffffff;
+            padding: 4px 12px;
+            border-radius: 30px;
+            border: 2px solid #94a3b8;
+        }
+
+        .btn-audio-toggle {
+            background-color: #64748b;
+            color: white;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        .btn-audio-toggle.active {
+            background-color: #22c55e;
+        }
+
+        .instruccion-paso {
+            background: #fef08a;
+            color: #854d0e;
+            font-weight: bold;
+            padding: 0.3rem 0.6rem;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 0.4rem;
+            font-size: 0.9rem;
+        }
+
+        /* DISEÑO DE MALLA COMPACTO */
+        .main-container {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 1rem;
+            padding: 1rem;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        section {
+            background-color: var(--panel-bg);
+            border-radius: 16px;
+            padding: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            border: 2px solid #e2e8f0;
+        }
+
+        .category-card {
+            background-color: var(--panel-inner);
+            border-radius: 12px;
+            padding: 0.5rem 0.8rem;
+            margin-bottom: 0.5rem;
+            border-left: 8px solid #cbd5e1;
+            border-top: 1px solid #e2e8f0;
+            border-right: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+        }
+
+        .voting-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+        }
+
+        .vote-box {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 0.4rem;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+
+        .label-tiempo {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-bottom: 0.2rem;
+            font-weight: 600;
+        }
+
+        .buttons-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+        }
+
+        .btn-action {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: none;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+        }
+
+        .btn-menos { background-color: #94a3b8; }
+        .btn-mas { background-color: #2563eb; }
+
+        .number-display {
+            font-size: 1.6rem;
+            font-weight: bold;
+            min-width: 30px;
+        }
+
+        /* GRÁFICO ESTADÍSTICO */
+        .chart-frame {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            height: 180px;
+            border-bottom: 4px solid #cbd5e1;
+            padding-bottom: 0.4rem;
+            margin-top: 0.5rem;
+            background: #f8fafc;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .bar-group {
+            display: flex;
+            gap: 6px;
+            align-items: flex-end;
+            height: 100%;
+            position: relative;
+        }
+
+        .bar {
+            width: 26px;
+            height: 0%;
+            border-radius: 4px 4px 0 0;
+            transition: height 0.4s ease-out;
+        }
+
+        .bar-un-poquito { opacity: 0.4; border: 2px dashed #64748b; }
+        .bar-mucho { opacity: 1; }
+
+        .nom-columna {
+            position: absolute;
+            bottom: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .explicacion-robot {
+            background-color: #f1f5f9;
+            border: 2px solid #cbd5e1;
+            padding: 0.8rem 1rem;
+            border-radius: 12px;
+            margin-top: 2.2rem;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        /* PASO 3: DISEÑO DEL LIENZO REPARADO */
+        .full-width { grid-column: 1 / -1; }
+
+        .zona-practica-evaluacion {
+            background-color: #f1f5f9;
+            border: 2px solid #cbd5e1;
+            border-radius: 14px;
+            padding: 1rem;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 1.2rem;
+        }
+
+        .lienzo-bloques {
+            background: #ffffff;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            height: 200px;
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            padding: 0.8rem;
+            position: relative;
+        }
+
+        .columna-bloques {
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: center;
+            width: 50px;
+            height: 140px; /* Altura controlada para los bloques */
+            position: relative;
+        }
+
+        .contenedor-acumulador {
+            width: 100%;
+            display: flex;
+            flex-direction: column-reverse;
+            gap: 2px;
+            margin-bottom: 5px;
+        }
+
+        .bloque-unidad {
+            width: 100%;
+            height: 14px;
+            border-radius: 3px;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            box-shadow: inset 0 1px 3px rgba(255,255,255,0.4);
+        }
+
+        .controles-bloque {
+            display: flex;
+            gap: 4px;
+            position: absolute;
+            bottom: -32px;
+        }
+
+        .btn-bloque {
+            width: 22px;
+            height: 22px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn-add { background-color: #2563eb; color: white; }
+        .btn-rem { background-color: #94a3b8; color: white; }
+
+        .etiqueta-bloque {
+            position: absolute;
+            bottom: -52px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .cuestionario-practico {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 0.8rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .opcion-respuesta {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            padding: 0.6rem;
+            margin: 0.3rem 0;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+        .opcion-respuesta:hover { 
+            background: #f1f5f9; 
+        }
+
+        .feedback-box {
+            margin-top: 0.5rem;
+            font-weight: bold;
+            font-size: 1.05rem;
+            text-align: center;
+            min-height: 22px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🧠 El Cerebro del Algoritmo</h1>
+        <div class="subtitle">¡Descubre cómo plataformas como YouTube eligen los videos para tu pantalla!</div>
+        
+        <div class="audio-control-container">
+            <span style="font-size: 0.85rem; font-weight: bold;">🔊 Asistente de Voz Escolar:</span>
+            <button id="audioToggle" class="btn-audio-toggle" onclick="conmutarVoz()">DESACTIVADO</button>
+        </div>
+    </header>
+
+    <div class="main-container">
+        
+        <!-- PASO 1 -->
+        <section>
+            <div class="instruccion-paso" onclick="leerTexto('Paso uno')">PASO 1: ¡Vota con tus compañeros de clase! 📋</div>
+            <p style="margin: 0 0 0.6rem 0; color: var(--text-muted); font-size: 0.95rem;">Suma un punto por cada compañero que use las siguientes aplicaciones:</p>
+            
+            <div class="category-card" style="border-left-color: var(--gaming);">
+                <div class="card-title" style="color: var(--gaming);">🎮 Videojuegos y Gaming</div>
+                <div class="voting-options">
+                    <div class="vote-box">
+                        <div class="label-tiempo">⏳ Un poquito (Menos de 1h)</div>
+                        <div class="buttons-row">
+                            <button class="btn-action btn-menos" onclick="votar('gamePoco', -1)">-</button>
+                            <div class="number-display" id="c-gamePoco" style="color: var(--gaming);">0</div>
+                            <button class="btn-action btn-mas" onclick="votar('gamePoco', 1)">+</button>
+                        </div>
+                    </div>
+                    <div class="vote-box">
+                        <div class="label-tiempo">⏰ ¡Mucho tiempo! (Más de 1h)</div>
+                        <div class="buttons-row">
+                            <button class="btn-action btn-menos" onclick="votar('gameMucho', -1)">-</button>
+                            <div class="number-display" id="c-gameMucho" style="color: var(--gaming);">0</div>
+                            <button class="btn-action btn-mas" onclick="votar('gameMucho', 1)">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="category-card" style="border-left-color: var(--musica);">
+                <div class="card-title" style="color: var(--musica);">🎵 Música, Canciones y Baile</div>
+                <div class="voting-options">
+                    <div class="vote-box">
+                        <div class="label-tiempo">⏳ Un poquito (Menos de 1h)</div>
+                        <div class="buttons-row">
+                            <button class="btn-action btn-menos" onclick="votar('musicPoco', -1)">-</button>
+                            <div class="number-display" id="c-musicPoco" style="color: var(--musica);">0</div>
+                            <button class="btn-action btn-mas" onclick="votar('musicPoco', 1)">+</button>
+                        </div>
+                    </div>
+                    <div class="vote-box">
+                        <div class="label-tiempo">⏰ ¡Mucho tiempo! (Más de 1h)</div>
+                        <div class="buttons-row">
+                            <button class="btn-action btn-menos" onclick="votar('musicMucho', -1)">-</button>
+                            <div class="number-display" id="c-musicMucho" style="color: var(--musica);">0</div>
+                            <button class="btn-action btn-mas" onclick="votar('musicMucho', 1)">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="category-card" style="border-left-color: var(--deportes);">
+                <div class="card-title" style="color: var(--deportes);">🏆 Deportes, Goles y Retos</div>
+                <div class="voting-options">
+                    <div class="vote-box">
+                        <div class="label-tiempo">⏳ Un poquito (Menos de 1h)</div>
+                        <div class="buttons-row">
+                            <button class="btn-action btn-menos" onclick="votar('deporPoco', -1)">-</button>
+                            <div class="number-display" id="c-deporPoco" style="color: var(--deportes);">0</div>
+                            <button class="btn-action btn-mas" onclick="votar('deporPoco', 1)">+</button>
+                        </div>
+                    </div>
+                    <div class="vote-box">
+                        <div class="label-tiempo">⏰ ¡Mucho tiempo! (Más de 1h)</div>
+                        <div class="buttons-row">
+                            <button class="btn-action btn-menos" onclick="votar('deporMucho', -1)">-</button>
+                            <div class="number-display" id="c-deporMucho" style="color: var(--deportes);">0</div>
+                            <button class="btn-action btn-mas" onclick="votar('deporMucho', 1)">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="category-card" style="border-left-color: var(--ciencia);">
+                <div class="card-title" style="color: var(--ciencia);">🔬 Ciencia, Experimentos y Tareas</div>
+                <div class="voting-options">
+                    <div class="vote-box">
+                        <div class="label-tiempo">⏳ Un poquito (Menos de 1h)</div>
+                        <div class="buttons-row">
+                            <button class="btn-action btn-menos" onclick="votar('cienPoco', -1)">-</button>
+                            <div class="number-display" id="c-cienPoco" style="color: var(--ciencia);">0</div>
+                            <button class="btn-action btn-mas" onclick="votar('cienPoco', 1)">+</button>
+                        </div>
+                    </div>
+                    <div class="vote-box">
+                        <div class="label-tiempo">⏰ ¡Mucho tiempo! (Más de 1h)</div>
+                        <div class="buttons-row">
+                            <button class="btn-action btn-menos" onclick="votar('cienMucho', -1)">-</button>
+                            <div class="number-display" id="c-cienMucho" style="color: var(--ciencia);">0</div>
+                            <button class="btn-action btn-mas" onclick="votar('cienMucho', 1)">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PASO 2 -->
+        <section>
+            <div class="instruccion-paso" onclick="leerTexto('Paso dos')">PASO 2: Mira el gráfico del salón 📊</div>
+            <p style="margin: 0; color: var(--text-muted); font-size: 0.95rem;">Las barras suben solas cuando agregas votos arriba.</p>
+            
+            <div class="chart-frame">
+                <div class="bar-group">
+                    <div id="b-gamePoco" class="bar bar-un-poquito" style="background-color: var(--gaming);"></div>
+                    <div id="b-gameMucho" class="bar bar-mucho" style="background-color: var(--gaming);"></div>
+                    <div class="nom-columna" style="color: var(--gaming);">Juegos</div>
+                </div>
+                <div class="bar-group">
+                    <div id="b-musicPoco" class="bar bar-un-poquito" style="background-color: var(--musica);"></div>
+                    <div id="b-musicMucho" class="bar bar-mucho" style="background-color: var(--musica);"></div>
+                    <div class="nom-columna" style="color: var(--musica);">Música</div>
+                </div>
+                <div class="bar-group">
+                    <div id="b-deporPoco" class="bar bar-un-poquito" style="background-color: var(--deportes);"></div>
+                    <div id="b-deporMucho" class="bar bar-mucho" style="background-color: var(--deportes);"></div>
+                    <div class="nom-columna" style="color: var(--deportes);">Deportes</div>
+                </div>
+                <div class="bar-group">
+                    <div id="b-cienPoco" class="bar bar-un-poquito" style="background-color: var(--ciencia);"></div>
+                    <div id="b-cienMucho" class="bar bar-mucho" style="background-color: var(--ciencia);"></div>
+                    <div class="nom-columna" style="color: var(--ciencia);">Ciencia</div>
+                </div>
+            </div>
+
+            <div class="explicacion-robot" id="robotTalk">
+                🤖 <strong>Mensaje del Algoritmo:</strong><br>
+                ¡Hola! Estoy esperando que ingreses los votos de tus compañeros. Apenas votes, encenderé la pantalla de videos para mostrarte lo que más les gusta.
+            </div>
+        </section>
+
+        <!-- PASO 3 (REPARADO POR COMPLETO) -->
+        <section class="full-width" style="margin-top: 0.5rem; padding-bottom: 4rem;">
+            <div class="instruccion-paso">PASO 3: ¡Tu turno práctico de demostrar lo aprendido! 🛠️📐</div>
+            <p style="margin: 0 0 1rem 0; color: #1e293b; font-size: 0.95rem; line-height: 1.4;">
+                <strong>El reto del Quiosco Saludable:</strong> Don Alberto quiere saber qué fruta prefieren los niños a la hora del recreo. Ayúdale a registrar las respuestas construyendo las barras con los bloques. Coloca de forma exacta: <strong>3 plátanos, 5 manzanas, 2 naranjas y 4 fresas</strong>. Luego responde la pregunta evaluativa.
+            </p>
+            
+            <div class="zona-practica-evaluacion">
+                
+                <!-- Lienzo de bloques interactivo funcional -->
+                <div class="lienzo-bloques">
+                    <!-- Plátano -->
+                    <div class="columna-bloques">
+                        <div id="bloques-platano" class="contenedor-acumulador"></div>
+                        <div class="controles-bloque">
+                            <button class="btn-bloque btn-rem" onclick="modificarBloque('platano', -1)">-</button>
+                            <button class="btn-bloque btn-add" onclick="modificarBloque('platano', 1)">+</button>
+                        </div>
+                        <div class="etiqueta-bloque" style="color: var(--platano);">🍌 Plátano</div>
+                    </div>
+
+                    <!-- Manzana -->
+                    <div class="columna-bloques">
+                        <div id="bloques-manzana" class="contenedor-acumulador"></div>
+                        <div class="controles-bloque">
+                            <button class="btn-bloque btn-rem" onclick="modificarBloque('manzana', -1)">-</button>
+                            <button class="btn-bloque btn-add" onclick="modificarBloque('manzana', 1)">+</button>
+                        </div>
+                        <div class="etiqueta-bloque" style="color: var(--manzana);">🍎 Manz.</div>
+                    </div>
+
+                    <!-- Naranja -->
+                    <div class="columna-bloques">
+                        <div id="bloques-naranja" class="contenedor-acumulador"></div>
+                        <div class="controles-bloque">
+                            <button class="btn-bloque btn-rem" onclick="modificarBloque('naranja', -1)">-</button>
+                            <button class="btn-bloque btn-add" onclick="modificarBloque('naranja', 1)">+</button>
+                        </div>
+                        <div class="etiqueta-bloque" style="color: var(--naranja);">🍊 Naran.</div>
+                    </div>
+
+                    <!-- Fresa -->
+                    <div class="columna-bloques">
+                        <div id="bloques-fresa" class="contenedor-acumulador"></div>
+                        <div class="controles-bloque">
+                            <button class="btn-bloque btn-rem" onclick="modificarBloque('fresa', -1)">-</button>
+                            <button class="btn-bloque btn-add" onclick="modificarBloque('fresa', 1)">+</button>
+                        </div>
+                        <div class="etiqueta-bloque" style="color: var(--fresa);">🍓 Fresa</div>
+                    </div>
+                </div>
+
+                <!-- Cuestionario -->
+                <div class="cuestionario-practico">
+                    <h3 style="margin: 0 0 4px 0; color: #b45309; font-size:1.05rem;">📝 EVALÚA TU GRÁFICO:</h3>
+                    <p style="margin: 0 0 10px 0; font-size: 0.9rem; color: var(--text-dark);">Según la cantidad exacta de frutas que te pidió Don Alberto, ¿cuál de ellas representa la <strong>Moda</strong> del recreo?</p>
+                    
+                    <button class="opcion-respuesta" onclick="evaluarModaAlumno('platano')">🍌 El Plátano</button>
+                    <button class="opcion-respuesta" onclick="evaluarModaAlumno('manzana')">🍎 La Manzana</button>
+                    <button class="opcion-respuesta" onclick="evaluarModaAlumno('naranja')">🍊 La Naranja</button>
+                    <button class="opcion-respuesta" onclick="evaluarModaAlumno('fresa')">🍓 La Fresa</button>
+
+                    <div id="feedbackAlumno" class="feedback-box"></div>
+                </div>
+
+            </div>
+        </section>
+    </div>
+
+    <script>
+        let vozActiva = false;
+
+        function conmutarVoz() {
+            vozActiva = !vozActiva;
+            const btn = document.getElementById("audioToggle");
+            if (vozActiva) {
+                btn.innerText = "ACTIVADO";
+                btn.classList.add("active");
+                leerTexto("El asistente de voz escolar está activado.");
+            } else {
+                btn.innerText = "DESACTIVADO";
+                btn.classList.remove("active");
+                if (window.speechSynthesis) window.speechSynthesis.cancel();
+            }
+        }
+
+        function leerTexto(texto) {
+            if (vozActiva && window.speechSynthesis) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(texto);
+                utterance.lang = 'es-PE';
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        // Votos Paso 1 y Paso 2
+        const votos = {
+            gamePoco: 0, gameMucho: 0,
+            musicPoco: 0, musicMucho: 0,
+            deporPoco: 0, deporMucho: 0,
+            cienPoco: 0, cienMucho: 0
+        };
+
+        // Estado de bloques Paso 3
+        const bloquesPractica = {
+            platano: 0,
+            manzana: 0,
+            naranja: 0,
+            fresa: 0
+        };
+
+        const nombresSimplesFrutas = {
+            platano: "Plátanos",
+            manzana: "Manzanas",
+            naranja: "Naranjas",
+            fresa: "Fresas"
+        };
+
+        function votar(variable, cantidad) {
+            if (votos[variable] + cantidad >= 0 && votos[variable] + cantidad <= 30) {
+                votos[variable] += cantidad;
+                document.getElementById(`c-${variable}`).innerText = votos[variable];
+                calcularYActualizar();
+            }
+        }
+
+        function modificarBloque(categoria, cantidad) {
+            if (bloquesPractica[categoria] + cantidad >= 0 && bloquesPractica[categoria] + cantidad <= 10) {
+                bloquesPractica[categoria] += cantidad;
+                renderizarBloques(categoria);
+                document.getElementById("feedbackAlumno").innerText = "";
+                
+                if (cantidad > 0) {
+                    leerTexto(`Añadiste un bloque a ${nombresSimplesFrutas[categoria]}.`);
+                } else {
+                    leerTexto(`Quitaste un bloque a ${nombresSimplesFrutas[categoria]}.`);
+                }
+            }
+        }
+
+        function renderizarBloques(categoria) {
+            const contenedor = document.getElementById(`bloques-${categoria}`);
+            if (!contenedor) return;
+            
+            contenedor.innerHTML = "";
+            let colorBloque = `var(--${categoria})`;
+            
+            for(let i = 0; i < bloquesPractica[categoria]; i++) {
+                const bloque = document.createElement("div");
+                bloque.className = "bloque-unidad";
+                bloque.style.backgroundColor = colorBloque;
+                contenedor.appendChild(bloque);
+            }
+        }
+
+        function evaluarModaAlumno(opcionSeleccionada) {
+            const feedback = document.getElementById("feedbackAlumno");
+            
+            // Validar que las cantidades coincidan exactamente con la consigna del problema
+            if(bloquesPractica.platano !== 3 || bloquesPractica.manzana !== 5 || bloquesPractica.naranja !== 2 || bloquesPractica.fresa !== 4) {
+                const msgErrorGral = "¡Cuidado! Aún no has colocado las cantidades exactas que pidió Don Alberto en el problema.";
+                feedback.innerHTML = `<span style='color: #ef4444;'>❌ ${msgErrorGral}</span>`;
+                leerTexto(msgErrorGral);
+                return;
+            }
+            
+            // Comprobación de respuesta
+            if (opcionSeleccionada === 'manzana') {
+                const mensajeCorrecto = "¡Excelente! ¡Lograste identificar la Moda correctamente! La manzana es la que más se repite con 5 bloques.";
+                feedback.innerHTML = `<span style='color: #10b981;'>🎉 ${mensajeCorrecto} 🌟</span>`;
+                leerTexto(mensajeCorrecto);
+            } else {
+                const mensajeIncorrecto = "¡Las barras están bien armadas! Pero esa fruta no es la Moda. Busca la columna que quedó más alta.";
+                feedback.innerHTML = `<span style='color: #ef4444;'>❌ ${mensajeIncorrecto}</span>`;
+                leerTexto(mensajeIncorrecto);
+            }
+        }
+
+        function calcularYActualizar() {
+            const totales = {
+                game: votos.gamePoco + votos.gameMucho,
+                music: votos.musicPoco + votos.musicMucho,
+                depor: votos.deporPoco + votos.deporMucho,
+                cien: votos.cienPoco + votos.cienMucho
+            };
+
+            const nombresCategorias = {
+                game: "VIDEOJUEGOS Y GAMING",
+                music: "MÚSICA, CANCIONES Y BAILE",
+                depor: "DEPORTES, GOLES Y RETOS",
+                cien: "CIENCIA, EXPERIMENTOS Y TAREAS"
+            };
+
+            const votosTotales = Object.values(totales).reduce((a, b) => a + b, 0);
+            const maxVotoActual = Math.max(...Object.values(votos), 1);
+            
+            for (let clave in votos) {
+                let porcentajeAltura = (votos[clave] / maxVotoActual) * 100;
+                document.getElementById(`b-${clave}`).style.height = `${porcentajeAltura}%`;
+            }
+
+            const robotTalk = document.getElementById("robotTalk");
+
+            if (votosTotales === 0) {
+                robotTalk.innerHTML = `🤖 <strong>Mensaje del Algoritmo:</strong><br> ¡Hola! Estoy esperando que ingreses los votos de tus compañeros. Apenas votes, encenderé la pantalla de videos para mostrarte lo que más les gusta.`;
+                return;
+            }
+
+            let temaGanador = 'none';
+            let maxFrecuencia = -1;
+            for (let clave in totales) {
+                if (totales[clave] > maxFrecuencia) {
+                    maxFrecuencia = totales[clave];
+                    temaGanador = clave;
+                }
+            }
+
+            if (temaGanador !== 'none') {
+                robotTalk.innerHTML = `🤖 <strong>¡El Algoritmo ya tomó una decisión!</strong><br> Analicé los votos y encontré que el tema favorito del salón es <strong>${nombresCategorias[temaGanador]}</strong> con un total de <strong>${totales[temaGanador]} votos</strong>. En matemática, a esto lo llamamos la <strong>Moda</strong>.`;
+            }
+        }
+
+        // Inicializar los contenedores del Paso 3 en 0
+        renderizarBloques('platano');
+        renderizarBloques('manzana');
+        renderizarBloques('naranja');
+        renderizarBloques('fresa');
+    </script>
+</body>
+</html>
